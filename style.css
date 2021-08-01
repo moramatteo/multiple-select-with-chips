@@ -1,0 +1,109 @@
+* {
+  /* box-sizing: content-box; */
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  height: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #8080809c;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.hide {
+  display: none !important;
+}
+
+.multiple-select-chip {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+
+.selected {
+  position: relative;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px blue solid;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.chips {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: row;
+}
+
+.chips > div {
+  background-color: #ece9e4;
+  position: relative;
+  margin-left: 5px;
+  height: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 3px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 1px solid #435a70;
+  border-radius: 24px;
+}
+
+.chips > div > span {
+  margin-left: 3px;
+  margin-right: 3px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.delete-chip {
+  cursor: pointer;
+}
+
+.text-input {
+  height: 35px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 5px;
+  border: none;
+  outline: 0px;
+}
+
+.options-list {
+  margin-top: 10px;
+  border: 1px grey solid;
+  border-radius: 10px;
+}
+
+.option {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.select {
+  text-decoration: underline;
+  color: #17324d;
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>‌</title>
+  <script src="jquery-3.5.1.js"></script>
+  <script src="mousetrap.min.js"></script>
+  <script src="mousetrap-pause.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="multiple-select-chip" select_name="primo">
+    <div class="selected">
+      <div class="chips">
+        <div value="valore0">
+          <span class="delete-chip" value="valore0" onclick="delete_chip($(this).attr('value'))">X</span>
+          <span>Ciao</span>
+        </div>
+      </div>
+      <input type="text" class="text-input mousetrap" placeholder="Cerca"
+        onfocus="show_options_list($(this).attr('select_name'))" select_name="primo"
+        onkeyup="options_filter($(this).attr('select_name'), this.value)">
+    </div>
+    <div class="options-list hide">
+      <div class="option" value="valore1" select_name="primo"
+        onclick="add_chip(this, $(this).first(), $(this).attr('value'), $(this).attr('select_name'))">
+        <div class="option-text">Prova1</div>
+        <div class="check-mark">Y</div>
+      </div>
+      <div class="option" value="valore2" select_name="primo"
+        onclick="add_chip(this, $(this).first(), $(this).attr('value'), $(this).attr('select_name'))">
+        <div class="option-text">Prova2</div>
+        <div class="check-mark">Y</div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <div class="multiple-select-chip" select_name="secondo">
+    <div class="selected">
+      <div class="chips">
+        <div value="valore0">
+          <span class="delete-chip" value="valore0" onclick="delete_chip($(this).attr('value'))">X</span>
+          <span>Ciao</span>
+        </div>
+      </div>
+      <input type="text" class="text-input mousetrap" placeholder="Cerca" select_name="secondo"
+        onfocus="show_options_list($(this).attr('select_name'))"
+        onkeyup="options_filter($(this).attr('select_name'), this.value)">
+    </div>
+    <div class="options-list hide">
+      <div class="option" value="valore1" select_name="secondo"
+        onclick="add_chip(this, $(this).first(), $(this).attr('value'), $(this).attr('select_name'))">
+        <div class="option-text">Prova1</div>
+        <div class="check-mark">Y</div>
+      </div>
+      <div class="option" value="valore2" select_name="secondo"
+        onclick="add_chip(this, $(this).first(), $(this).attr('value'), $(this).attr('select_name'))">
+        <div class="option-text">Prova2</div>
+        <div class="check-mark">Y</div>
+      </div>
+    </div>
+  </div>
+  <script src="my_moduls.js"></script>
+  <script src="index.js"></script>
+</body>
+
+</html>
