@@ -1,7 +1,6 @@
 var select_name;
 
 function show_options_list(name) {
-  console.log(name)
   $(`[select_name=${name}] > .options-list`).removeClass("hide");
   Mousetrap.unpause();
   select_name = name;
@@ -12,8 +11,8 @@ document.onclick = function (e) {
   var out = true;
   for (var i = 0; i < e.path.length; i++) {
     if (
-      e.path[i].className == "multiple-select-chip" 
-      && e.path[i].attributes.select_name == select_name
+      e.path[i].className == "multiple-select-chip"
+      //! && e.path[i].attributes.select_name == select_name
     ) {
       out = false;
       break;
@@ -25,10 +24,10 @@ document.onclick = function (e) {
   }
 };
 
-function add_chip(this_div, children, value, name) {
+function add_chip(this_div, children, value) {
   if (
     $(
-      `.multiple-select-chip[select_name=${name}] > .options-list > .option[value="${value}"]`
+      `.multiple-select-chip[select_name=${select_name}] > .options-list > .option[value="${value}"]`
     ).hasClass("select")
   ) {
     delete_chip(value);
@@ -40,7 +39,8 @@ function add_chip(this_div, children, value, name) {
       var text = value;
     }
 
-    $(`[select_name=${name}] > .selected > .chips`).append(`
+    $(`.multiple-select-chip[select_name=${select_name}] > .selected > .chips`)
+      .append(`
     <div value="${value}">
       <span class="delete-chip" value="${value}" onclick="delete_chip($(this).attr('value'))">X</span>
       <span>${text}</span>
@@ -50,7 +50,6 @@ function add_chip(this_div, children, value, name) {
 }
 
 function delete_chip(value) {
-  console.log("can");
   $(
     `.multiple-select-chip[select_name=${select_name}] > .selected > .chips > div[value="${value}"]`
   ).remove();
@@ -76,11 +75,13 @@ function delete_chip(value) {
 // pippo.new_data(new_data)
 
 Mousetrap.bind("enter", function (e) {
-  var value = $(`[select_name=${select_name}] .text-input`).val();
+  var value = $(`.text-input[select_name=${select_name}]`).val();
   if (value != "") {
     $(".text-input").val("").blur();
-    add_chip("", "", value, select_name);
-    $(`.option[select_name=${select_name}]`).removeClass("hide");
+    add_chip("", "", value);
+    $(
+      `.multiple-select-chip[select_name=${select_name}] > .options-list > .option`
+    ).removeClass("hide");
     $(
       `.multiple-select-chip[select_name=${select_name}] > .options-list`
     ).addClass("hide");
@@ -90,27 +91,30 @@ Mousetrap.bind("enter", function (e) {
 //valore iniziale
 Mousetrap.pause();
 
-function options_filter(name, text) {
-  if (text == "") $(`.option[select_name=${name}]`).removeClass("hide");
+function options_filter(text) {
+  if (text == "")
+    $(
+      `.multiple-select-chip[select_name=${select_name}] > .options-list > .option`
+    ).removeClass("hide");
   else {
     var lunghezza = $(
-      `.multiple-select-chip[select_name=${name}] > .options-list`
+      `.multiple-select-chip[select_name=${select_name}] > .options-list`
     ).children().length;
     for (var i = 1; i < lunghezza + 1; i++) {
       if (
         $(
-          `.multiple-select-chip[select_name=${name}] > .options-list > div:nth-child(${i}) > .option-text`
+          `.multiple-select-chip[select_name=${select_name}] > .options-list > div:nth-child(${i}) > .option-text`
         )
           .html()
           .toLowerCase()
           .indexOf(text.toLowerCase()) == -1
       ) {
         $(
-          `.multiple-select-chip[select_name=${name}] > .options-list > div:nth-child(${i})`
+          `.multiple-select-chip[select_name=${select_name}] > .options-list > div:nth-child(${i})`
         ).addClass("hide");
       } else {
         $(
-          `.multiple-select-chip[select_name=${name}] > .options-list > div:nth-child(${i})`
+          `.multiple-select-chip[select_name=${select_name}] > .options-list > div:nth-child(${i})`
         ).removeClass("hide");
       }
     }
