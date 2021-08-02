@@ -9,6 +9,8 @@
   <script src="jquery-3.5.1.js"></script>
   <script src="mousetrap.min.js"></script>
   <script src="mousetrap-pause.js"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -28,11 +30,15 @@
     <div class="options-list hide">
       <div class="option" value="valore1" onclick="add_chip(this, $(this).first(), $(this).attr('value'))">
         <div class="option-text">Prova1</div>
-        <div class="check-mark">Y</div>
+        <div class="check-mark">
+          <span class="material-icons-outlined">close</span>
+        </div>
       </div>
       <div class="option" value="valore2" onclick="add_chip(this, $(this).first(), $(this).attr('value'))">
         <div class="option-text">Prova2</div>
-        <div class="check-mark">Y</div>
+        <div class="check-mark">
+          <span class="material-icons-outlined">close</span>
+        </div>
       </div>
     </div>
   </div>

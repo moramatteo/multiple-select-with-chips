@@ -27,20 +27,22 @@ document.onclick = function (e) {
 function add_chip(this_div, children, value) {
   if (
     $(
-      `.multiple-select-chip[select_name=${select_name}] > .options-list > .option[value="${value}"]`
+      `[select_name=${select_name}] > .options-list > .option[value="${value}"]`
     ).hasClass("select")
   ) {
+    // se l'opzione cliccata è già stata selezionata, bisonga deselezionarla
     delete_chip(value);
   } else {
     if (this_div != "") {
+      //se la funzione è chiamata dal click delle opzioni
       var text = children[0].firstChild.nextSibling.innerText;
       $(this_div).addClass("select");
     } else {
+      //se la funzione è chimata dall'invio nell'input
       var text = value;
     }
 
-    $(`.multiple-select-chip[select_name=${select_name}] > .selected > .chips`)
-      .append(`
+    $(`[select_name=${select_name}] > .selected > .chips`).append(`
     <div value="${value}">
       <span class="delete-chip" value="${value}" onclick="delete_chip($(this).attr('value'))">X</span>
       <span>${text}</span>
@@ -51,11 +53,70 @@ function add_chip(this_div, children, value) {
 
 function delete_chip(value) {
   $(
-    `.multiple-select-chip[select_name=${select_name}] > .selected > .chips > div[value="${value}"]`
+    `[select_name=${select_name}] > .selected > .chips > div[value="${value}"]`
   ).remove();
   $(
-    `.multiple-select-chip[select_name=${select_name}] > .options-list > .option[value="${value}"]`
+    `[select_name=${select_name}] > .options-list > .option[value="${value}"]`
   ).removeClass("select");
+}
+
+Mousetrap.bind("enter", function (e) {
+  var value = $(`.text-input[select_name=${select_name}]`).val();
+  if (value != "") {
+    $(".text-input").val("").blur();
+    add_chip("", "", value);
+    // finita la digitazione rendere mostrabile le opzioni per una successiva visione
+    $(`[select_name=${select_name}] > .options-list > .option`).removeClass(
+      "hide"
+    );
+    $(`[select_name=${select_name}] > .options-list`).addClass("hide");
+  }
+});
+
+//valore iniziale
+Mousetrap.pause();
+
+function options_filter(text) {
+  if (text == "")
+    //quando il campo di input è vuoto, si devono vedere tutte le opazioni
+    $(`[select_name=${select_name}] > .options-list > .option`).removeClass(
+      "hide"
+    );
+  else {
+    var lunghezza = $(`[select_name=${select_name}] > .options-list`).children()
+      .length;
+    for (var i = 1; i < lunghezza + 1; i++) {
+      if (
+        //compara il testo di ogni opzione con il testo di inout
+        $(
+          `[select_name=${select_name}] > .options-list > div:nth-child(${i}) > .option-text`
+        )
+          .html()
+          .toLowerCase()
+          .indexOf(text.toLowerCase()) == -1
+      ) {
+        // se non c'è nessuna corrispondenza
+        $(
+          `[select_name=${select_name}] > .options-list > div:nth-child(${i})`
+        ).addClass("hide");
+      } else {
+        $(
+          `[select_name=${select_name}] > .options-list > div:nth-child(${i})`
+        ).removeClass("hide");
+      }
+    }
+  }
+}
+
+// FOR THE WITH OF THE INPUT TEXT
+var chips_width = $(".chips").width();
+var selected_width = $(".selected").width();
+var input_width;
+var delta_width = selected_width - chips_width;
+if (delta_width > 200) {
+  $(".text-input").css("width", delta_width);
+} else{
+  $(".text-input").css("width", "100px");
 }
 
 // CREA NUOVO
@@ -73,54 +134,3 @@ function delete_chip(value) {
 //   { text: "ciao2", value: "cia2" },
 // ];
 // pippo.new_data(new_data)
-
-Mousetrap.bind("enter", function (e) {
-  var value = $(`.text-input[select_name=${select_name}]`).val();
-  if (value != "") {
-    $(".text-input").val("").blur();
-    add_chip("", "", value);
-    $(
-      `.multiple-select-chip[select_name=${select_name}] > .options-list > .option`
-    ).removeClass("hide");
-    $(
-      `.multiple-select-chip[select_name=${select_name}] > .options-list`
-    ).addClass("hide");
-  }
-});
-
-//valore iniziale
-Mousetrap.pause();
-
-function options_filter(text) {
-  if (text == "")
-    $(
-      `.multiple-select-chip[select_name=${select_name}] > .options-list > .option`
-    ).removeClass("hide");
-  else {
-    var lunghezza = $(
-      `.multiple-select-chip[select_name=${select_name}] > .options-list`
-    ).children().length;
-    for (var i = 1; i < lunghezza + 1; i++) {
-      if (
-        $(
-          `.multiple-select-chip[select_name=${select_name}] > .options-list > div:nth-child(${i}) > .option-text`
-        )
-          .html()
-          .toLowerCase()
-          .indexOf(text.toLowerCase()) == -1
-      ) {
-        $(
-          `.multiple-select-chip[select_name=${select_name}] > .options-list > div:nth-child(${i})`
-        ).addClass("hide");
-      } else {
-        $(
-          `.multiple-select-chip[select_name=${select_name}] > .options-list > div:nth-child(${i})`
-        ).removeClass("hide");
-      }
-    }
-  }
-}
-
-// FOR STYLE
-// var chips_width = $(".chips").width()
-// var selected_width = $(".selected").width()
