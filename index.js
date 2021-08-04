@@ -12,7 +12,7 @@ document.onclick = function (e) {
   for (var i = 0; i < e.path.length; i++) {
     if (
       e.path[i].className == "multiple-select-chip"
-      //! && e.path[i].attributes.select_name == select_name
+      //! && e.path[i].attributes.select_name.value == select_name
     ) {
       out = false;
       break;
@@ -83,9 +83,11 @@ function options_filter(text) {
       "hide"
     );
   else {
-    var lunghezza = $(`[select_name=${select_name}] > .options-list`).children()
-      .length;
-    for (var i = 1; i < lunghezza + 1; i++) {
+    var children_number = $(
+      `[select_name=${select_name}] > .options-list`
+    ).children().length;
+    // valore iniziale della varibile del ciclo = 1 perché il primo child ha come valore 1
+    for (var i = 1; i < children_number + 1; i++) {
       if (
         //compara il testo di ogni opzione con il testo di inout
         $(
@@ -100,6 +102,7 @@ function options_filter(text) {
           `[select_name=${select_name}] > .options-list > div:nth-child(${i})`
         ).addClass("hide");
       } else {
+        //se c'è corrispondenza
         $(
           `[select_name=${select_name}] > .options-list > div:nth-child(${i})`
         ).removeClass("hide");
@@ -108,29 +111,42 @@ function options_filter(text) {
   }
 }
 
-// FOR THE WITH OF THE INPUT TEXT
-var chips_width = $(".chips").width();
-var selected_width = $(".selected").width();
-var input_width;
-var delta_width = selected_width - chips_width;
-if (delta_width > 200) {
-  $(".text-input").css("width", delta_width);
-} else{
-  $(".text-input").css("width", "100px");
+// CREA NUOVO
+var pippo_data = [
+  { text: "prova1", value: "val1" },
+  { text: "prova2", value: "val2", select: true },
+  { text: "prova3", value: "val3" },
+];
+
+var pippo_config = {
+  add_personal_chip: true,
+};
+
+var pippo = new select("primo", pippo_data, pippo_config);
+var pluto = new select("secondo", pippo_data, pippo_config);
+
+// MODIFICA OPZIONI
+var new_data = [
+  { text: "ciao1", value: "cia1", select: true },
+  { text: "ciao2", value: "cia2" },
+];
+pippo.new_data(new_data);
+
+// SET THE WITH OF THE INPUT TEXT
+function set_input_with() {
+  var chips_width = $(".chips").width();
+  var selected_width = $(".selected").width();
+  var input_width;
+  var delta_width = selected_width - chips_width;
+  if (delta_width > 200) {
+    $(".text-input").css("width", delta_width);
+  } else {
+    $(".text-input").css("width", "100px");
+  }
 }
 
-// CREA NUOVO
-// var pippo_data = [
-//   { text: "prova1", value: "val1" },
-//   //!AGGIUNGERE AUTO SELEZIONE
-//   { text: "prova2", value: "val2", select: true },
-//   { text: "prova3", value: "val3" }
-// ];
-// var pippo = new select(".multiple-select-chip", pippo_data);
+$(window).resize(function () {
+  set_input_with();
+});
 
-// // MODIFICA OPZIONI
-// var new_data = [
-//   { text: "ciao1", value: "cia1" },
-//   { text: "ciao2", value: "cia2" },
-// ];
-// pippo.new_data(new_data)
+window.onload = set_input_with();
