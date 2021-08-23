@@ -25,39 +25,32 @@ document.onclick = function (e) {
 };
 
 function add_chip(this_div, children, value) {
-  if (
-    $(
-      `[select_name=${select_name}] > .options-list > .option[value="${value}"]`
-    ).hasClass("select")
-  ) {
-    // se l'opzione cliccata è già stata selezionata, bisonga deselezionarla
-    delete_chip(value);
+  if (this_div != "") {
+    //se la funzione è chiamata dal click delle opzioni
+    var text = children[0].firstChild.nextSibling.innerText;
+    $(this_div).addClass("select");
   } else {
-    if (this_div != "") {
-      //se la funzione è chiamata dal click delle opzioni
-      var text = children[0].firstChild.nextSibling.innerText;
-      $(this_div).addClass("select");
-    } else {
-      //se la funzione è chimata dall'invio nell'input
-      var text = value;
-    }
+    //se la funzione è chimata dall'invio nell'input
+    var text = value;
+  }
 
-    $(`[select_name=${select_name}] > .selected > .chips`).append(`
+  $(`[select_name=${select_name}] > .selected > .chips`).append(`
     <div value="${value}">
       <span class="delete-chip" value="${value}" onclick="delete_chip($(this).attr('value'))">X</span>
       <span>${text}</span>
     </div>
   `);
-  }
+
+  $(this_div).attr("onclick", "delete_chip($(this).attr('value'))");
 }
 
 function delete_chip(value) {
   $(
     `[select_name=${select_name}] > .selected > .chips > div[value="${value}"]`
   ).remove();
-  $(
-    `[select_name=${select_name}] > .options-list > .option[value="${value}"]`
-  ).removeClass("select");
+  $(`[select_name=${select_name}] > .options-list > .option[value="${value}"]`)
+    .removeClass("select")
+    .attr("onclick", "add_chip(this, $(this).first(), $(this).attr('value'))");
 }
 
 Mousetrap.bind("enter", function (e) {
