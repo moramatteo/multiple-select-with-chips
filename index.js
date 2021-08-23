@@ -42,15 +42,20 @@ function add_chip(this_div, children, value) {
   `);
 
   $(this_div).attr("onclick", "delete_chip($(this).attr('value'))");
+
+  set_input_with();
 }
 
 function delete_chip(value) {
   $(
     `[select_name=${select_name}] > .selected > .chips > div[value="${value}"]`
   ).remove();
+  
   $(`[select_name=${select_name}] > .options-list > .option[value="${value}"]`)
     .removeClass("select")
     .attr("onclick", "add_chip(this, $(this).first(), $(this).attr('value'))");
+
+  set_input_with();
 }
 
 Mousetrap.bind("enter", function (e) {
