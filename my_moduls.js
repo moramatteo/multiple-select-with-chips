@@ -1,12 +1,35 @@
 class select {
   constructor(querySelector, data, config) {
-    try {
-      this.select_name = querySelector;
+    this.select_name = querySelector;
 
-      var all_value = [];
-      var html_options = this.create_options(data);
-      var html_content = `<div class="selected">
-                      <div class="chips">`;
+    var html_options = this.create_options(data);
+    var html_content = `<div class="selected">
+                          <div class="chips">`;
+
+    html_content += this.create_chips(data);
+
+    html_content +=
+      `</div>
+        <input type="text" class="text-input mousetrap" placeholder="Cerca"
+        onfocus="show_options_list($(this).attr('select_name'))" select_name="${querySelector}"
+        onkeyup="options_filter(this.value)">
+      </div>
+      ` + html_options;
+    $(`[select_name=${querySelector}]`).append(html_content);
+
+    if (config.add_personal_chip == false) {
+      $(`[select_name=${querySelector}] > .selected > .text-input`).removeClass(
+        "mousetrap"
+      );
+    }
+
+    set_input_with();
+  }
+
+  create_chips(data) {
+    var all_value = [];
+    var html_content = ``;
+    try {
       for (var i = 0; i < data.length; i++) {
         //controlla se non mancano nè il testo nè il valore
         if (data[i].text == undefined || data[i].text == "")
@@ -21,35 +44,23 @@ class select {
 
         if (data[i].select == true) {
           html_content += `<div value="${data[i].value}">
-        <span class="delete-chip" value="${data[i].value}" onclick="delete_chip($(this).attr('value'))">X</span>
-          <span>${data[i].text}</span>
-        </div>`;
+              <span class="delete-chip" value="${data[i].value}" onclick="delete_chip($(this).attr('value'))">X</span>
+              <span>${data[i].text}</span>
+            </div>`;
         }
-      }
-      html_content +=
-        `</div>
-        <input type="text" class="text-input mousetrap" placeholder="Cerca"
-        onfocus="show_options_list($(this).attr('select_name'))" select_name="${querySelector}"
-        onkeyup="options_filter(this.value)">
-      </div>
-      ` + html_options;
-      $(`[select_name=${querySelector}]`).append(html_content);
-
-      if (config.add_personal_chip == false) {
-        $(
-          `[select_name=${querySelector}] > .selected > .text-input`
-        ).removeClass("mousetrap");
       }
     } catch (error) {
       alert(`errore nel selettore chiamato "${this.select_name}"\n${error}`);
     }
+
+    return html_content;
   }
 
   create_options(data) {
     var html_content = `<div class="options-list hide">`;
     for (var i = 0; i < data.length; i++) {
       if (data[i].select == true) {
-        html_content += `<div class="option select" value="${data[i].value}" onclick="add_chip(this, $(this).first(), $(this).attr('value'))">`;
+        html_content += `<div class="option select" value="${data[i].value}" onclick="delete_chip($(this).attr('value'))">`;
       } else {
         html_content += `<div class="option" value="${data[i].value}" onclick="add_chip(this, $(this).first(), $(this).attr('value'))">`;
       }
@@ -71,20 +82,28 @@ class select {
     // 2) mod == "add" --> aggiunge le nuovi opzioni alla fine di quelle già esistenti
     if (!mod) mod = "replace";
 
-    var html_content = this.create_options(data);
+    var html_options = this.create_options(data);
 
     if (mod == "replace") {
       $(`[select_name=${this.select_name}]  > .options-list`).replaceWith(
-        html_content
+        html_options
       );
+
       $(
         `[select_name=${this.select_name}] > .selected > .chips > div`
       ).remove();
-    }
-    if (mod == "add")
-      $(`[select_name=${this.select_name}]  > .options-list`).append(
-        html_content
+      $(`[select_name=${this.select_name}]  > .selected > .chips`).append(
+        ` ${this.create_chips(data)} `
       );
+    }
+    if (mod == "add") {
+      $(`[select_name=${this.select_name}]  > .options-list`).append(
+        html_options
+      );
+      $(`[select_name=${this.select_name}]  > .selected > .chips`).append(
+        ` ${this.create_chips(data)} `
+      );
+    }
   }
 
   get_value() {
