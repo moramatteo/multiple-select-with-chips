@@ -25,41 +25,32 @@ document.onclick = function (e) {
 };
 
 function add_chip(this_div, children, value) {
-  if (
-    $(
-      `[select_name=${select_name}] > .options-list > .option[value="${value}"]`
-    ).hasClass("select")
-  ) {
-    // se l'opzione cliccata è già stata selezionata, bisonga deselezionarla
-    delete_chip(value);
+  if (this_div != "") {
+    //se la funzione è chiamata dal click delle opzioni
+    var text = children[0].firstChild.nextSibling.innerText;
+    $(this_div).addClass("select");
   } else {
-    if (this_div != "") {
-      //se la funzione è chiamata dal click delle opzioni
-      var text = children[0].firstChild.nextSibling.innerText;
-      $(this_div).addClass("select");
-    } else {
-      //se la funzione è chimata dall'invio nell'input
-      var text = value;
-    }
+    //se la funzione è chimata dall'invio nell'input
+    var text = value;
+  }
 
-    $(`[select_name=${select_name}] > .selected > .chips`).append(`
+  $(`[select_name=${select_name}] > .selected > .chips`).append(`
     <div value="${value}">
       <span class="delete-chip" value="${value}" onclick="delete_chip($(this).attr('value'))">X</span>
       <span>${text}</span>
     </div>
   `);
-  }
-  set_input_with();
+
+  $(this_div).attr("onclick", "delete_chip($(this).attr('value'))");
 }
 
 function delete_chip(value) {
   $(
     `[select_name=${select_name}] > .selected > .chips > div[value="${value}"]`
   ).remove();
-  $(
-    `[select_name=${select_name}] > .options-list > .option[value="${value}"]`
-  ).removeClass("select");
-  set_input_with();
+  $(`[select_name=${select_name}] > .options-list > .option[value="${value}"]`)
+    .removeClass("select")
+    .attr("onclick", "add_chip(this, $(this).first(), $(this).attr('value'))");
 }
 
 Mousetrap.bind("enter", function (e) {
@@ -113,6 +104,27 @@ function options_filter(text) {
   }
 }
 
+// CREA NUOVO
+var pippo_data = [
+  { text: "prova1", value: "val1" },
+  { text: "prova2", value: "val2", select: true },
+  { text: "prova3", value: "val3" },
+];
+
+var pippo_config = {
+  add_personal_chip: true,
+};
+
+var pippo = new select("primo", pippo_data, pippo_config);
+var pluto = new select("secondo", pippo_data, pippo_config);
+
+// MODIFICA OPZIONI
+var new_data = [
+  { text: "ciao1", value: "cia1", select: true },
+  { text: "ciao2", value: "cia2" },
+];
+pippo.new_data(new_data);
+
 // SET THE WITH OF THE INPUT TEXT
 function set_input_with() {
   var chips_width = $(".chips").width();
@@ -131,26 +143,3 @@ $(window).resize(function () {
 });
 
 window.onload = set_input_with();
-
-
-// CREA NUOVO
-var pippo_data = [
-  { text: "prova1", value: "val1" },
-  { text: "prova2", value: "val2", select: true },
-  { text: "prova3", value: "val3", select: true },
-];
-
-var pippo_config = {
-  add_personal_chip: true,
-};
-
-var pippo = new select("primo", pippo_data, pippo_config);
-var pluto = new select("secondo", pippo_data, pippo_config);
-
-// MODIFICA OPZIONI
-// var new_data = [
-//   { text: "ciao1", value: "cia1", select: true },
-//   { text: "ciao2", value: "cia2", select: true },
-//   { text: "ciao2", value: "cia2", select: true },
-// ];
-// pippo.new_data(new_data);

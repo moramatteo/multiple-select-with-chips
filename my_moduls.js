@@ -60,7 +60,7 @@ class select {
     var html_content = `<div class="options-list hide">`;
     for (var i = 0; i < data.length; i++) {
       if (data[i].select == true) {
-        html_content += `<div class="option select" value="${data[i].value}" onclick="add_chip(this, $(this).first(), $(this).attr('value'))">`;
+        html_content += `<div class="option select" value="${data[i].value}" onclick="delete_chip($(this).attr('value'))">`;
       } else {
         html_content += `<div class="option" value="${data[i].value}" onclick="add_chip(this, $(this).first(), $(this).attr('value'))">`;
       }
