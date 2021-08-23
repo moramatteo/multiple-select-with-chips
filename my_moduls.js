@@ -108,15 +108,46 @@ class select {
 
   get_value() {
     var tot_values = [];
-    var children_number = $(
+    var options_number = $(
       `[select_name=${this.select_name}] > .selected > .chips`
     ).children().length;
-    for (var i = 1; i < children_number + 1; i++) {
+    for (var i = 1; i < options_number + 1; i++) {
       var val = $(
         `[select_name=${this.select_name}] > .selected > .chips > div:nth-child(${i})`
       ).attr("value");
       tot_values.push(val);
     }
     return tot_values;
+  }
+}
+
+function select_all() {
+  var options_number = $(
+    `[select_name=${select_name}] > .options-list`
+  ).children().length;
+  for (var i = 1; i < options_number + 1; i++) {
+    var this_div = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
+    if ($(this_div).hasClass("select") == true) {
+      continue;
+    } else {
+      add_chip($(this_div), $(this_div).first(), $(this_div).attr("value"));
+    }
+  }
+}
+
+function deselect_all(forced) {
+  var options_number = $(
+    `[select_name=${select_name}] > .options-list`
+  ).children().length;
+  for (var i = 1; i < options_number + 1; i++) {
+    var this_div = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
+    if ($(this_div).hasClass("select") == false) {
+      continue;
+    } else {
+      delete_chip($(this_div).attr("value"));
+    }
+  }
+  if (forced == true) {
+    $(`[select_name=${select_name}] > .selected > .chips > div`).remove();
   }
 }

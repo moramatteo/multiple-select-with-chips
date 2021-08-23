@@ -50,7 +50,7 @@ function delete_chip(value) {
   $(
     `[select_name=${select_name}] > .selected > .chips > div[value="${value}"]`
   ).remove();
-  
+
   $(`[select_name=${select_name}] > .options-list > .option[value="${value}"]`)
     .removeClass("select")
     .attr("onclick", "add_chip(this, $(this).first(), $(this).attr('value'))");
@@ -81,11 +81,11 @@ function options_filter(text) {
       "hide"
     );
   else {
-    var children_number = $(
+    var options_number = $(
       `[select_name=${select_name}] > .options-list`
     ).children().length;
     // valore iniziale della varibile del ciclo = 1 perché il primo child ha come valore 1
-    for (var i = 1; i < children_number + 1; i++) {
+    for (var i = 1; i < options_number + 1; i++) {
       if (
         //compara il testo di ogni opzione con il testo di inout
         $(
