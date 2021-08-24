@@ -25,25 +25,56 @@ document.onclick = function (e) {
 };
 
 function add_chip(this_div, children, value) {
-  if (this_div != "") {
-    //se la funzione è chiamata dal click delle opzioni
-    var text = children[0].firstChild.nextSibling.innerText;
-    $(this_div).addClass("select");
-  } else {
-    //se la funzione è chimata dall'invio nell'input
-    var text = value;
-  }
+  try {
+    if (this_div != "") {
+      //se la funzione è chiamata dal click delle opzioni
+      var text = children[0].firstChild.nextSibling.innerText;
+      $(this_div).addClass("select");
+    } else {
+      //se la funzione è chimata dall'invio nell'input
+      var text = value;
+      var all_value = [];
 
-  $(`[select_name=${select_name}] > .selected > .chips`).append(`
+      //chips check
+      var chips_number = $(
+        `[select_name=${select_name}] > .selected > .chips`
+      ).children().length;
+      for (var i = 1; i < chips_number + 1; i++) {
+        var div_in_use = `[select_name=${select_name}] > .selected > .chips > div:nth-child(${i})`;
+        var val = $(div_in_use).attr("value");
+        all_value.push(val);
+        if (all_value.includes(text)) {
+          throw "valore già selezionato"
+        }
+      }
+
+      //options' value check
+      var options_number = $(
+        `[select_name=${select_name}] > .options-list`
+      ).children().length;
+      for (var i = 1; i < options_number + 1; i++) {
+        var div_in_use = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
+        var val = $(div_in_use).attr("value");
+        all_value.push(val);
+        if (all_value.includes(text)) {
+          throw "c'è già una opzione con questo valore"
+        }
+      }
+    }
+
+    $(`[select_name=${select_name}] > .selected > .chips`).append(`
     <div value="${value}">
       <span class="delete-chip" value="${value}" onclick="delete_chip($(this).attr('value'))">X</span>
       <span>${text}</span>
     </div>
   `);
 
-  $(this_div).attr("onclick", "delete_chip($(this).attr('value'))");
+    $(this_div).attr("onclick", "delete_chip($(this).attr('value'))");
 
-  set_input_with();
+    set_input_with();
+  } catch (error) {
+    alert(error)
+  }
 }
 
 function delete_chip(value) {
@@ -87,7 +118,7 @@ function options_filter(text) {
     // valore iniziale della varibile del ciclo = 1 perché il primo child ha come valore 1
     for (var i = 1; i < options_number + 1; i++) {
       if (
-        //compara il testo di ogni opzione con il testo di inout
+        //compara il testo di ogni opzione con il testo di input
         $(
           `[select_name=${select_name}] > .options-list > div:nth-child(${i}) > .option-text`
         )
@@ -109,6 +140,25 @@ function options_filter(text) {
   }
 }
 
+// SET THE WITH OF THE INPUT TEXT
+function set_input_with() {
+  var chips_width = $(".chips").width();
+  var selected_width = $(".selected").width();
+  var delta_width = selected_width - chips_width;
+  if (delta_width > 200) {
+    $(".text-input").css("width", delta_width);
+  } else {
+    $(".text-input").css("width", "100px");
+  }
+}
+
+$(window).resize(function () {
+  set_input_with();
+});
+
+window.onload = set_input_with();
+
+
 // CREA NUOVO
 var pippo_data = [
   { text: "prova1", value: "val1" },
@@ -127,24 +177,7 @@ var pluto = new select("secondo", pippo_data, pippo_config);
 var new_data = [
   { text: "ciao1", value: "cia1", select: true },
   { text: "ciao2", value: "cia2" },
+  // { text: "ciao2", value: "cia2" },
+  { text: "prova3", value: "val3" },
 ];
-pippo.new_data(new_data);
-
-// SET THE WITH OF THE INPUT TEXT
-function set_input_with() {
-  var chips_width = $(".chips").width();
-  var selected_width = $(".selected").width();
-  var input_width;
-  var delta_width = selected_width - chips_width;
-  if (delta_width > 200) {
-    $(".text-input").css("width", delta_width);
-  } else {
-    $(".text-input").css("width", "100px");
-  }
-}
-
-$(window).resize(function () {
-  set_input_with();
-});
-
-window.onload = set_input_with();
+pippo.new_data(new_data, "add");
