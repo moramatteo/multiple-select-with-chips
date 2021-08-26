@@ -33,33 +33,7 @@ function add_chip(this_div, children, value) {
     } else {
       //se la funzione è chimata dall'invio nell'input
       var text = value;
-      var all_value = [];
-
-      //chips check
-      var chips_number = $(
-        `[select_name=${select_name}] > .selected > .chips`
-      ).children().length;
-      for (var i = 1; i < chips_number + 1; i++) {
-        var div_in_use = `[select_name=${select_name}] > .selected > .chips > div:nth-child(${i})`;
-        var val = $(div_in_use).attr("value");
-        all_value.push(val);
-        if (all_value.includes(text)) {
-          throw "valore già selezionato"
-        }
-      }
-
-      //options' value check
-      var options_number = $(
-        `[select_name=${select_name}] > .options-list`
-      ).children().length;
-      for (var i = 1; i < options_number + 1; i++) {
-        var div_in_use = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
-        var val = $(div_in_use).attr("value");
-        all_value.push(val);
-        if (all_value.includes(text)) {
-          throw "c'è già una opzione con questo valore"
-        }
-      }
+      data_validator(select_name, text, "enter");
     }
 
     $(`[select_name=${select_name}] > .selected > .chips`).append(`
@@ -142,21 +116,23 @@ function options_filter(text) {
 
 // SET THE WITH OF THE INPUT TEXT
 function set_input_with() {
-  var chips_width = $(".chips").width();
-  var selected_width = $(".selected").width();
-  var delta_width = selected_width - chips_width;
-  if (delta_width > 200) {
-    $(".text-input").css("width", delta_width);
-  } else {
-    $(".text-input").css("width", "100px");
+  var options_number = $(
+    `div[select_name]`).length;
+  for (var i = 0; i < options_number; i++){
+    var chips_width = $(`div[select_name]:eq(${i}) .chips`).width();
+    var selected_width = $(`div[select_name]:eq(${i}) .selected`).width();
+    var delta_width = selected_width - chips_width;
+    if (delta_width > 100) {
+      $(`div[select_name]:eq(${i}) .text-input`).css("width", delta_width);
+    } else {
+      $(`div[select_name]:eq(${i}) .text-input`).css("width", "100px");
+    }
   }
 }
 
 $(window).resize(function () {
   set_input_with();
 });
-
-window.onload = set_input_with();
 
 
 // CREA NUOVO
@@ -178,6 +154,6 @@ var new_data = [
   { text: "ciao1", value: "cia1", select: true },
   { text: "ciao2", value: "cia2" },
   // { text: "ciao2", value: "cia2" },
-  { text: "prova3", value: "val3" },
+  // { text: "prova3", value: "val3" },
 ];
 pippo.new_data(new_data, "add");

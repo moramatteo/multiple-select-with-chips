@@ -1,9 +1,9 @@
 class select {
   constructor(querySelector, data, config) {
     this.select_name = querySelector;
-    var html_chips = this.create_chips(data);
-    if (html_chips != "ERRORE") {
-      //se non ci sono errore
+    try {
+      data_validator(this.select_name, data, "constructor");
+      var html_chips = this.create_chips(data);
       var html_content = `<div class="selected">
       <div class="chips">
         ${html_chips}
@@ -25,8 +25,8 @@ class select {
       }
 
       set_input_with();
-    } else {
-      //nel caso in cui ci siano degli errori
+    } catch (error) {
+      alert(`errore nel selettore chiamato "${this.select_name}"\n${error}`);
       $(`[select_name=${querySelector}]`).append(
         "errore nell'inserimento delle opzioni"
       );
@@ -35,33 +35,16 @@ class select {
 
   // creates the HTML content of the chips in case there are pre-selected elements on loading
   create_chips(data) {
-    var all_value = [];
     var html_content = ``;
-    try {
-      for (var i = 0; i < data.length; i++) {
-        //check if neither the text nor the value are missing
-        if (data[i].text == undefined || data[i].text == "")
-          throw `Non è stato impostato nessun testo per il valore "${data[i].value}"`;
-        if (data[i].value == undefined || data[i].value == "")
-          throw `Non è stato impostato nessun valore per il testo "${data[i].text}"`;
-
-        //check if there are no duplicate values
-        if (all_value.includes(data[i].value))
-          throw "Ci sono dei valori duplicati";
-        else all_value.push(data[i].value);
-
-        if (data[i].select == true) {
-          html_content += `<div value="${data[i].value}">
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].select == true) {
+        html_content += `<div value="${data[i].value}">
               <span class="delete-chip" value="${data[i].value}" onclick="delete_chip($(this).attr('value'))">X</span>
               <span>${data[i].text}</span>
             </div>`;
-        }
       }
-      return html_content;
-    } catch (error) {
-      alert(`errore nel selettore chiamato "${this.select_name}"\n${error}`);
-      return "ERRORE";
     }
+    return html_content;
   }
 
   //creates the HTML content of the options
@@ -90,9 +73,10 @@ class select {
     // 2) mod == "add" -> adds new options to the end of existing ones
     if (!mod) mod = "replace";
 
-    var html_options = this.create_options(data);
-    var html_chips = this.create_chips(data);
-    if (html_chips != "ERRORE") {
+    try {
+      data_validator(this.select_name, data, mod);
+      var html_chips = this.create_chips(data);
+      var html_options = this.create_options(data);
       if (mod == "replace") {
         $(`[select_name=${this.select_name}]  > .options-list`).replaceWith(
           '<div class="options-list hide">' + html_options + "</div>"
@@ -113,7 +97,8 @@ class select {
           ` ${html_chips} `
         );
       }
-    } else {
+    } catch (error) {
+      alert(`errore nel selettore chiamato "${this.select_name}"\n${error}`);
       $(`[select_name=${this.select_name}]`).replaceWith(
         "errore nell'inserimento delle opzioni"
       );
@@ -191,5 +176,83 @@ function deselect_all(forced) {
   }
   if (forced == "forced") {
     $(`[select_name=${select_name}] > .selected > .chips > div`).remove();
+  }
+}
+
+function data_validator(select_name, data, mod) {
+  var all_value = [];
+
+  if (mod == "enter") {
+    //chips check
+    var chips_number = $(
+      `[select_name=${select_name}] > .selected > .chips`
+    ).children().length;
+    for (var i = 1; i < chips_number + 1; i++) {
+      var div_in_use = `[select_name=${select_name}] > .selected > .chips > div:nth-child(${i})`;
+      var val = $(div_in_use).attr("value");
+      all_value.push(val);
+      if (all_value.includes(data)) {
+        throw "valore già selezionato";
+      }
+    }
+
+    //options' value check
+    var options_number = $(
+      `[select_name=${select_name}] > .options-list`
+    ).children().length;
+    for (var i = 1; i < options_number + 1; i++) {
+      var div_in_use = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
+      var val = $(div_in_use).attr("value");
+      all_value.push(val);
+      if (all_value.includes(data)) {
+        throw "c'è già una opzione con questo valore";
+      }
+    }
+  }
+
+  if (mod == "constructor" || mod == "replace") {
+    for (var i = 0; i < data.length; i++) {
+      //check if neither the text nor the value are missing
+      if (data[i].text == undefined || data[i].text == "")
+        throw `Non è stato impostato nessun testo per il valore "${data[i].value}"`;
+      if (data[i].value == undefined || data[i].value == "")
+        throw `Non è stato impostato nessun valore per il testo "${data[i].text}"`;
+
+      //check if there are no duplicate values
+      if (all_value.includes(data[i].value))
+        throw "Ci sono dei valori duplicati";
+      else all_value.push(data[i].value);
+    }
+  }
+
+  if (mod == "add") {
+    data_validator(select_name, data, "replace");
+
+    //aggiunge all'array tutti chips
+    var chips_number = $(
+      `[select_name=${select_name}] > .selected > .chips`
+    ).children().length;
+    for (var i = 1; i < chips_number + 1; i++) {
+      var div_in_use = `[select_name=${select_name}] > .selected > .chips > div:nth-child(${i})`;
+      var val = $(div_in_use).attr("value");
+      all_value.push(val);
+    }
+
+    //aggiunge all'array tutti i valori delle opzioni
+    var options_number = $(
+      `[select_name=${select_name}] > .options-list`
+    ).children().length;
+    for (var i = 1; i < options_number + 1; i++) {
+      var div_in_use = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
+      var val = $(div_in_use).attr("value");
+      all_value.push(val);
+    }
+
+    //controlla se ogni valore è presente nell'array
+    for (var i = 0; i < data.length; i++) {
+      if (all_value.includes(data[i].value)) {
+        throw "Ci sono dei valori duplicati";
+      }
+    }
   }
 }
