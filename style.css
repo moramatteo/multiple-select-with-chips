@@ -103,14 +103,16 @@ body {
   border-style   : solid;
 }
 
-.option:first-child {
-  border-width : 1px 1px 0px 1px;
-  border-radius: 10px 10px 0px 0px;
+.option:first-child, .top-border {
+  border-top-width       : 1px !important;
+  border-top-left-radius : 10px !important;
+  border-top-right-radius: 10px !important;
 }
 
-.option:last-child {
-  border-width : 0px 1px 1px 1px;
-  border-radius: 0px 0px 10px 10px;
+ .option:last-child, .bottom-border {
+  border-bottom-width       : 1px !important;
+  border-bottom-left-radius : 10px !important;
+  border-bottom-right-radius: 10px !important;
 }
 
 .check-mark > span {

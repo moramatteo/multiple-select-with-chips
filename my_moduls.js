@@ -20,7 +20,7 @@ class select {
 
       if (config.add_personal_chip == false) {
         $(
-          `[select_name=${querySelector}] > .selected > .text-input`
+          `[select_name=${querySelector}] .text-input`
         ).removeClass("mousetrap");
       }
 
@@ -78,22 +78,22 @@ class select {
       var html_chips = this.create_chips(data);
       var html_options = this.create_options(data);
       if (mod == "replace") {
-        $(`[select_name=${this.select_name}]  > .options-list`).replaceWith(
+        $(`[select_name=${this.select_name}] .options-list`).replaceWith(
           '<div class="options-list hide">' + html_options + "</div>"
         );
 
         $(
-          `[select_name=${this.select_name}] > .selected > .chips > div`
+          `[select_name=${this.select_name}] .chips > div`
         ).remove();
-        $(`[select_name=${this.select_name}]  > .selected > .chips`).append(
+        $(`[select_name=${this.select_name}] .chips`).append(
           ` ${html_chips} `
         );
       }
       if (mod == "add") {
-        $(`[select_name=${this.select_name}]  > .options-list`).append(
+        $(`[select_name=${this.select_name}] .options-list`).append(
           html_options
         );
-        $(`[select_name=${this.select_name}]  > .selected > .chips`).append(
+        $(`[select_name=${this.select_name}] .chips`).append(
           ` ${html_chips} `
         );
       }
@@ -112,16 +112,16 @@ class select {
       values: [],
     };
     var chips_number = $(
-      `[select_name=${this.select_name}] > .selected > .chips`
+      `[select_name=${this.select_name}] .chips`
     ).children().length;
     for (var i = 1; i < chips_number + 1; i++) {
       var val = $(
-        `[select_name=${this.select_name}] > .selected > .chips > div:nth-child(${i})`
+        `[select_name=${this.select_name}] .chips > div:nth-child(${i})`
       ).attr("value");
       selected_info.values.push(val);
 
       var text = $(
-        `[select_name=${this.select_name}] > .selected > .chips > div:nth-child(${i}) > span:nth-child(2)`
+        `[select_name=${this.select_name}] .chips > div:nth-child(${i}) > span:nth-child(2)`
       ).html();
       selected_info.names.push(text);
     }
@@ -131,10 +131,10 @@ class select {
   check_all_selected() {
     var all_selected = true;
     var options_number = $(
-      `[select_name=${this.select_name}] > .options-list`
+      `[select_name=${this.select_name}] .options-list`
     ).children().length;
     for (var i = 1; i < options_number + 1; i++) {
-      var div_in_use = `[select_name=${this.select_name}] > .options-list > div:nth-child(${i})`;
+      var div_in_use = `[select_name=${this.select_name}] .options-list > div:nth-child(${i})`;
       if ($(div_in_use).hasClass("select") == false) {
         all_selected = false;
         break;
@@ -146,10 +146,10 @@ class select {
 
 function select_all() {
   var options_number = $(
-    `[select_name=${select_name}] > .options-list`
+    `[select_name=${select_name}] .options-list`
   ).children().length;
   for (var i = 1; i < options_number + 1; i++) {
-    var div_in_use = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
+    var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
     if ($(div_in_use).hasClass("select") == true) {
       continue;
     } else {
@@ -164,10 +164,10 @@ function select_all() {
 
 function deselect_all(forced) {
   var options_number = $(
-    `[select_name=${select_name}] > .options-list`
+    `[select_name=${select_name}] .options-list`
   ).children().length;
   for (var i = 1; i < options_number + 1; i++) {
-    var div_in_use = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
+    var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
     if ($(div_in_use).hasClass("select") == false) {
       continue;
     } else {
@@ -175,7 +175,7 @@ function deselect_all(forced) {
     }
   }
   if (forced == "forced") {
-    $(`[select_name=${select_name}] > .selected > .chips > div`).remove();
+    $(`[select_name=${select_name}] .chips > div`).remove();
   }
 }
 
@@ -185,10 +185,10 @@ function data_validator(select_name, data, mod) {
   if (mod == "enter") {
     //chips check
     var chips_number = $(
-      `[select_name=${select_name}] > .selected > .chips`
+      `[select_name=${select_name}] .chips`
     ).children().length;
     for (var i = 1; i < chips_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] > .selected > .chips > div:nth-child(${i})`;
+      var div_in_use = `[select_name=${select_name}] .chips > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");
       all_value.push(val);
       if (all_value.includes(data)) {
@@ -198,10 +198,10 @@ function data_validator(select_name, data, mod) {
 
     //options' value check
     var options_number = $(
-      `[select_name=${select_name}] > .options-list`
+      `[select_name=${select_name}] .options-list`
     ).children().length;
     for (var i = 1; i < options_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
+      var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");
       all_value.push(val);
       if (all_value.includes(data)) {
@@ -230,20 +230,20 @@ function data_validator(select_name, data, mod) {
 
     //aggiunge all'array tutti chips
     var chips_number = $(
-      `[select_name=${select_name}] > .selected > .chips`
+      `[select_name=${select_name}] .chips`
     ).children().length;
     for (var i = 1; i < chips_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] > .selected > .chips > div:nth-child(${i})`;
+      var div_in_use = `[select_name=${select_name}] .chips > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");
       all_value.push(val);
     }
 
     //aggiunge all'array tutti i valori delle opzioni
     var options_number = $(
-      `[select_name=${select_name}] > .options-list`
+      `[select_name=${select_name}] .options-list`
     ).children().length;
     for (var i = 1; i < options_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] > .options-list > div:nth-child(${i})`;
+      var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");
       all_value.push(val);
     }
