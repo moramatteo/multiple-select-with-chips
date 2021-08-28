@@ -2,13 +2,16 @@ class select {
   constructor(querySelector, data, config) {
     this.select_name = querySelector;
     try {
+      if (config.placeholder == undefined) config.placeholder = "Cerca";
       data_validator(this.select_name, data, "constructor");
       var html_chips = this.create_chips(data);
       var html_content = `<div class="selected">
       <div class="chips">
         ${html_chips}
       </div>
-      <input type="text" class="text-input mousetrap" placeholder="Cerca"
+      <input type="text" class="text-input mousetrap" placeholder="${
+        config.placeholder
+      }"
       onfocus="show_options_list($(this).attr('select_name'))" select_name="${querySelector}"
       onkeyup="options_filter(this.value)">
     </div>
@@ -18,10 +21,14 @@ class select {
 
       $(`[select_name=${querySelector}]`).append(html_content);
 
+      //set config options
       if (config.add_personal_chip == false) {
-        $(
-          `[select_name=${querySelector}] .text-input`
-        ).removeClass("mousetrap");
+        $(`[select_name=${querySelector}] .text-input`).removeClass(
+          "mousetrap"
+        );
+      }
+      if (config.autocomplete == false) {
+        $(`[select_name=${querySelector}] .text-input`).removeAttr("onkeyup");
       }
 
       set_input_with();
@@ -82,20 +89,14 @@ class select {
           '<div class="options-list hide">' + html_options + "</div>"
         );
 
-        $(
-          `[select_name=${this.select_name}] .chips > div`
-        ).remove();
-        $(`[select_name=${this.select_name}] .chips`).append(
-          ` ${html_chips} `
-        );
+        $(`[select_name=${this.select_name}] .chips > div`).remove();
+        $(`[select_name=${this.select_name}] .chips`).append(` ${html_chips} `);
       }
       if (mod == "add") {
         $(`[select_name=${this.select_name}] .options-list`).append(
           html_options
         );
-        $(`[select_name=${this.select_name}] .chips`).append(
-          ` ${html_chips} `
-        );
+        $(`[select_name=${this.select_name}] .chips`).append(` ${html_chips} `);
       }
     } catch (error) {
       alert(`errore nel selettore chiamato "${this.select_name}"\n${error}`);
@@ -111,9 +112,8 @@ class select {
       names: [],
       values: [],
     };
-    var chips_number = $(
-      `[select_name=${this.select_name}] .chips`
-    ).children().length;
+    var chips_number = $(`[select_name=${this.select_name}] .chips`).children()
+      .length;
     for (var i = 1; i < chips_number + 1; i++) {
       var val = $(
         `[select_name=${this.select_name}] .chips > div:nth-child(${i})`
@@ -142,41 +142,54 @@ class select {
     }
     return all_selected;
   }
+
+  //metodo per chiamare la funzione senza mettere come parametro il select_name
+  select_all() {
+    select_all(this.select_name);
+  }
+
+  //metodo per chiamare la funzione senza mettere come parametro il select_name
+  deselect_all(forced) {
+    deselect_all(forced, this.select_name);
+  }
 }
 
-function select_all() {
+function select_all(select_name_arg) {
+  if (!select_name_arg) select_name_arg = select_name;
   var options_number = $(
-    `[select_name=${select_name}] .options-list`
+    `[select_name=${select_name_arg}] .options-list`
   ).children().length;
   for (var i = 1; i < options_number + 1; i++) {
-    var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
+    var div_in_use = `[select_name=${select_name_arg}] .options-list > div:nth-child(${i})`;
     if ($(div_in_use).hasClass("select") == true) {
       continue;
     } else {
       add_chip(
         $(div_in_use),
         $(div_in_use).first(),
-        $(div_in_use).attr("value")
+        $(div_in_use).attr("value"),
+        select_name_arg
       );
     }
   }
 }
 
-function deselect_all(forced) {
+function deselect_all(forced, select_name_arg) {
+  if (!select_name_arg) select_name_arg = select_name;
   var options_number = $(
-    `[select_name=${select_name}] .options-list`
+    `[select_name=${select_name_arg}] .options-list`
   ).children().length;
   for (var i = 1; i < options_number + 1; i++) {
-    var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
+    var div_in_use = `[select_name=${select_name_arg}] .options-list > div:nth-child(${i})`;
     if ($(div_in_use).hasClass("select") == false) {
       continue;
     } else {
       $(div_in_use).removeClass("select");
-      delete_chip($(div_in_use).attr("value"), select_name);
+      delete_chip($(div_in_use).attr("value"), select_name_arg);
     }
   }
   if (forced == "forced") {
-    $(`[select_name=${select_name}] .chips > div`).remove();
+    $(`[select_name=${select_name_arg}] .chips > div`).remove();
   }
 }
 
@@ -185,9 +198,8 @@ function data_validator(select_name, data, mod) {
 
   if (mod == "enter") {
     //chips check
-    var chips_number = $(
-      `[select_name=${select_name}] .chips`
-    ).children().length;
+    var chips_number = $(`[select_name=${select_name}] .chips`).children()
+      .length;
     for (var i = 1; i < chips_number + 1; i++) {
       var div_in_use = `[select_name=${select_name}] .chips > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");
@@ -230,9 +242,8 @@ function data_validator(select_name, data, mod) {
     data_validator(select_name, data, "replace");
 
     //aggiunge all'array tutti chips
-    var chips_number = $(
-      `[select_name=${select_name}] .chips`
-    ).children().length;
+    var chips_number = $(`[select_name=${select_name}] .chips`).children()
+      .length;
     for (var i = 1; i < chips_number + 1; i++) {
       var div_in_use = `[select_name=${select_name}] .chips > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");

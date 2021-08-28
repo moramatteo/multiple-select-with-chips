@@ -1,7 +1,8 @@
 var select_name;
 var delete_chip_function =
   "delete_chip($(this).attr('value'), $(this).attr('select_name'))";
-var add_chip_function = "add_chip(this, $(this).first(), $(this).attr('value'))";
+var add_chip_function =
+  "add_chip(this, $(this).first(), $(this).attr('value'))";
 
 function show_options_list(name) {
   $(`[select_name=${name}] > .options-list`).removeClass("hide");
@@ -27,8 +28,9 @@ document.onclick = function (e) {
   }
 };
 
-function add_chip(this_div, children, value) {
+function add_chip(this_div, children, value, select_name_arg) {
   try {
+    if (!select_name_arg) select_name_arg = select_name;
     if (this_div != "") {
       //se la funzione è chiamata dal click delle opzioni
       var text = children[0].firstChild.nextSibling.innerText;
@@ -36,13 +38,13 @@ function add_chip(this_div, children, value) {
     } else {
       //se la funzione è chimata dall'invio nell'input
       var text = value;
-      data_validator(select_name, text, "enter");
+      data_validator(select_name_arg, text, "enter");
     }
 
-    $(`[select_name=${select_name}] .chips`).append(`
+    $(`[select_name=${select_name_arg}] .chips`).append(`
     <div value="${value}">
       <span>${text}</span>
-      <span class="delete-chip material-icons" value="${value}" select_name="${select_name}" onclick="${delete_chip_function}">close</span>
+      <span class="delete-chip material-icons" value="${value}" select_name="${select_name_arg}" onclick="${delete_chip_function}">close</span>
     </div>
   `);
 
@@ -55,7 +57,7 @@ function add_chip(this_div, children, value) {
 }
 
 function delete_chip(value, select_name_arg) {
-    $(`[select_name=${select_name_arg}] .chips > div[value="${value}"]`).remove();
+  $(`[select_name=${select_name_arg}] .chips > div[value="${value}"]`).remove();
 
   $(`[select_name=${select_name_arg}] .option[value="${value}"]`)
     .removeClass("select")
