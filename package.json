@@ -1,0 +1,19 @@
+{
+  "name": "multiple_select_with_chips",
+  "version": "1.0.0",
+  "description": "Create a selector to select multiple options with live search",
+  "main": "multiple_select_with_chips.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moramatteo/multiple-select-with-chips.git"
+  },
+  "author": "Matteo Morari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moramatteo/multiple-select-with-chips/issues"
+  },
+  "homepage": "https://github.com/moramatteo/multiple-select-with-chips#readme"
+}
