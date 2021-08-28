@@ -11,19 +11,22 @@ function show_options_list(name) {
 }
 
 //quando il click è fuori dal l'elemento, l'elenco viene nascosto
+var old_select_name;
 document.onclick = function (e) {
   var out = true;
+  var new_select_name = select_name;
+  //old_select_name deve essere diverso da undefined perché la prima volta che si chiama la funzione non è mai stato definito
+  if (old_select_name != new_select_name && old_select_name != undefined)
+    $(`[select_name="${old_select_name}"] .options-list`).addClass("hide");
   for (var i = 0; i < e.path.length; i++) {
-    if (
-      e.path[i].className == "multiple-select-chip"
-      //! && e.path[i].attributes.select_name.value == select_name
-    ) {
+    if (e.path[i].className == "multiple-select-chip") {
       out = false;
+      old_select_name = new_select_name;
       break;
     }
   }
   if (out) {
-    $(".options-list").addClass("hide");
+    $(`[select_name="${new_select_name}"] .options-list`).addClass("hide");
     Mousetrap.pause();
   }
 };
