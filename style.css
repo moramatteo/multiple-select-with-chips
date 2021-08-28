@@ -3,16 +3,18 @@
   box-sizing: border-box;
 }
 
-::-webkit-scrollbar {
+
+[select_name] ::-webkit-scrollbar {
   height: 2px;
+  width : 5px;
 }
 
-::-webkit-scrollbar-thumb {
+[select_name] ::-webkit-scrollbar-thumb {
   background-color: gray;
   border-radius   : 5px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+[select_name] ::-webkit-scrollbar-thumb:hover {
   background-color: #8080809c;
 }
 
@@ -33,13 +35,15 @@ body {
 }
 
 .selected {
-  position      : relative;
-  height        : 40px;
-  display       : flex;
-  flex-direction: row;
-  border-bottom : 1px blue solid;
-  overflow-x    : auto;
-  overflow-y    : hidden;
+  position        : relative;
+  height          : 50px;
+  display         : flex;
+  flex-direction  : row;
+  border-bottom   : 1px blue solid;
+  overflow-x      : auto;
+  overflow-y      : hidden;
+  background-color: #f0f0f0;
+  border-radius   : 4px 4px 0 0;
 }
 
 .chips {
@@ -51,68 +55,79 @@ body {
 }
 
 .chips > div {
-  background-color: #ece9e4;
-  position        : relative;
-  margin-left     : 5px;
-  height          : 25px;
-  top             : 50%;
-  transform       : translateY(-50%);
-  padding         : 3px;
-  display         : flex;
-  flex-direction  : row;
-  align-items     : center;
-  border          : 1px solid #435a70;
-  border-radius   : 24px;
+  background-color   : #e0e0e0;
+  position           : relative;
+  margin-left        : 5px;
+  height             : 30px;
+  top                : 50%;
+  transform          : translateY(-50%);
+  padding-top        : 9px;
+  padding-bottom     : 11px;
+  padding-left       : 12px;
+  padding-right      : 8px;
+  display            : flex;
+  flex-direction     : row;
+  align-items        : center;
+  border-radius      : 20px;
+  transition-duration: .5s;
+}
+
+.chips > div:hover {
+  background-color: #c6c6c6;
 }
 
 .chips > div > span {
-  margin-left   : 3px;
-  margin-right  : 3px;
-  padding-bottom: 2px;
+  margin-left : 3px;
+  margin-right: 3px;
 }
 
 .delete-chip {
-  cursor: pointer;
+  cursor             : pointer;
+  color              : #e0e0e0;
+  font-size          : 0.9em;
+  border-radius      : 100%;
+  background-color   : #929292;
+  transition-duration: 0.5s;
+}
+
+.delete-chip:hover {
+  background-color: #777777;
 }
 
 .text-input {
-  height     : 35px;
-  position   : relative;
-  top        : 50%;
-  transform  : translateY(-50%);
-  margin-left: 5px;
-  border     : none;
-  outline    : 0px;
+  height          : 35px;
+  position        : relative;
+  top             : 50%;
+  transform       : translateY(-50%);
+  margin-left     : 5px;
+  border          : none;
+  outline         : 0px;
+  background-color: #f0f0f0;
 }
 
 .options-list {
   margin-top: 10px;
+  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%),
+    0 1px 10px 0 rgb(0 0 0 / 12%);
+  max-height: 150px;
+  overflow-y: auto;
 }
 
 .option {
-  padding-top    : 5px;
-  padding-bottom : 5px;
-  padding-left   : 20px;
-  padding-right  : 20px;
-  display        : flex;
-  flex-direction : row;
-  justify-content: space-between;
-  align-items    : center;
-  border-color   : black;
-  border-width   : 0px 1px 0px 1px;
-  border-style   : solid;
+  padding-top        : 10px;
+  padding-bottom     : 10px;
+  padding-left       : 20px;
+  padding-right      : 20px;
+  display            : flex;
+  flex-direction     : row;
+  justify-content    : space-between;
+  align-items        : center;
+  cursor             : pointer;
+  transition-duration: .3s;
 }
 
-.option:first-child, .top-border {
-  border-top-width       : 1px !important;
-  border-top-left-radius : 10px !important;
-  border-top-right-radius: 10px !important;
-}
-
- .option:last-child, .bottom-border {
-  border-bottom-width       : 1px !important;
-  border-bottom-left-radius : 10px !important;
-  border-bottom-right-radius: 10px !important;
+.option:hover {
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .check-mark > span {

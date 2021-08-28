@@ -48,8 +48,42 @@
   <br>
   <br>
   <div class="multiple-select-chip" select_name="secondo"></div>
-  <script src="my_moduls.js"></script>
   <script src="index.js"></script>
+  <script src="my_moduls.js"></script>
+  <script>
+    // CREA NUOVO
+    var pippo_data = [
+      { text: "prova1", value: "val1" },
+      { text: "prova2", value: "val2", select: true },
+      { text: "prova3", value: "val3" },
+      { text: "prova4", value: "val4" },
+      { text: "prova5", value: "val5" },
+      { text: "prova6", value: "val6" },
+      { text: "prova7", value: "val7" },
+      { text: "prova8", value: "val8" },
+      { text: "prova9", value: "val9" },
+      { text: "prova10", value: "val10" },
+      { text: "prova11", value: "val11" },
+      { text: "prova12", value: "val12" },
+      { text: "prova13", value: "val13" },
+    ];
+
+    var pippo_config = {
+      add_personal_chip: true,
+    };
+
+    var pippo = new select("primo", pippo_data, pippo_config);
+    var pluto = new select("secondo", pippo_data, pippo_config);
+
+    // MODIFICA OPZIONI
+    var new_data = [
+      { text: "ciao1", value: "cia1", select: true },
+      { text: "ciao2", value: "cia2" },
+      // { text: "ciao2", value: "cia2" },
+      // { text: "prova3", value: "val3" },
+    ];
+    pippo.new_data(new_data, "add");
+  </script>
 </body>
 
 </html>

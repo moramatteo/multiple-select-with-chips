@@ -1,4 +1,7 @@
 var select_name;
+var delete_chip_function =
+  "delete_chip($(this).attr('value'), $(this).attr('select_name'))";
+var add_chip_function = "add_chip(this, $(this).first(), $(this).attr('value'))";
 
 function show_options_list(name) {
   $(`[select_name=${name}] > .options-list`).removeClass("hide");
@@ -38,12 +41,12 @@ function add_chip(this_div, children, value) {
 
     $(`[select_name=${select_name}] .chips`).append(`
     <div value="${value}">
-      <span class="delete-chip" value="${value}" onclick="delete_chip($(this).attr('value'))">X</span>
       <span>${text}</span>
+      <span class="delete-chip material-icons" value="${value}" select_name="${select_name}" onclick="${delete_chip_function}">close</span>
     </div>
   `);
 
-    $(this_div).attr("onclick", "delete_chip($(this).attr('value'))");
+    $(this_div).attr("onclick", `${delete_chip_function}`);
 
     set_input_with();
   } catch (error) {
@@ -51,12 +54,12 @@ function add_chip(this_div, children, value) {
   }
 }
 
-function delete_chip(value) {
-  $(`[select_name=${select_name}] .chips > div[value="${value}"]`).remove();
+function delete_chip(value, select_name_arg) {
+    $(`[select_name=${select_name_arg}] .chips > div[value="${value}"]`).remove();
 
-  $(`[select_name=${select_name}] .option[value="${value}"]`)
+  $(`[select_name=${select_name_arg}] .option[value="${value}"]`)
     .removeClass("select")
-    .attr("onclick", "add_chip(this, $(this).first(), $(this).attr('value'))");
+    .attr("onclick", add_chip_function);
 
   set_input_with();
 }
@@ -135,26 +138,3 @@ function set_input_with() {
 $(window).resize(function () {
   set_input_with();
 });
-
-// CREA NUOVO
-var pippo_data = [
-  { text: "prova1", value: "val1" },
-  { text: "prova2", value: "val2", select: true },
-  { text: "prova3", value: "val3" },
-];
-
-var pippo_config = {
-  add_personal_chip: true,
-};
-
-var pippo = new select("primo", pippo_data, pippo_config);
-var pluto = new select("secondo", pippo_data, pippo_config);
-
-// MODIFICA OPZIONI
-var new_data = [
-  { text: "ciao1", value: "cia1", select: true },
-  { text: "ciao2", value: "cia2" },
-  // { text: "ciao2", value: "cia2" },
-  // { text: "prova3", value: "val3" },
-];
-pippo.new_data(new_data, "add");

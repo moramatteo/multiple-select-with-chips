@@ -39,9 +39,9 @@ class select {
     for (var i = 0; i < data.length; i++) {
       if (data[i].select == true) {
         html_content += `<div value="${data[i].value}">
-              <span class="delete-chip" value="${data[i].value}" onclick="delete_chip($(this).attr('value'))">X</span>
-              <span>${data[i].text}</span>
-            </div>`;
+          <span>${data[i].text}</span>
+          <span class="delete-chip material-icons" value="${data[i].value}" select_name="${this.select_name}" onclick="${delete_chip_function}">close</span>
+        </div>`;
       }
     }
     return html_content;
@@ -52,9 +52,9 @@ class select {
     var html_content = "";
     for (var i = 0; i < data.length; i++) {
       if (data[i].select == true) {
-        html_content += `<div class="option select" value="${data[i].value}" onclick="delete_chip($(this).attr('value'))">`;
+        html_content += `<div class="option select" value="${data[i].value}" select_name="${this.select_name}" onclick="${delete_chip_function}">`;
       } else {
-        html_content += `<div class="option" value="${data[i].value}" onclick="add_chip(this, $(this).first(), $(this).attr('value'))">`;
+        html_content += `<div class="option" value="${data[i].value}" select_name="${this.select_name}" onclick="${add_chip_function}">`;
       }
       html_content += `
           <div class="option-text">${data[i].text}</div>
@@ -171,7 +171,8 @@ function deselect_all(forced) {
     if ($(div_in_use).hasClass("select") == false) {
       continue;
     } else {
-      delete_chip($(div_in_use).attr("value"));
+      $(div_in_use).removeClass("select");
+      delete_chip($(div_in_use).attr("value"), select_name);
     }
   }
   if (forced == "forced") {
