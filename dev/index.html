@@ -7,11 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>‌</title>
   <script src="jquery-3.5.1.js"></script>
-  <script src="mousetrap.min.js"></script>
-  <script src="mousetrap-pause.js"></script>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* a larger width is set for the development file for convenience*/
+    .multiple-select-chip {
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body>
@@ -25,7 +29,7 @@
           <span>Ciao</span>
         </div>
       </div>
-      <input type="text" class="text-input mousetrap" placeholder="Cerca"
+      <input type="text" class="text-input add_personal_chip" placeholder="Cerca"
         onfocus="show_options_list($(this).attr('select_name'))" select_name="primo"
         onkeyup="options_filter(this.value)">
     </div>
@@ -48,8 +52,8 @@
   <br>
   <br>
   <div class="multiple-select-chip" select_name="secondo"></div>
-  <script src="index.js"></script>
-  <script src="my_moduls.js"></script>
+  <script src="functions.js"></script>
+  <script src="class.js"></script>
   <script>
     // CREA NUOVO
     var pippo_data = [
@@ -70,14 +74,14 @@
 
     var pippo_config = {
       //di default è true
-      // add_personal_chip: false,
-      //di default è Ciao
+      add_personal_chip: false,
+      //di default è Cerca
       // placeholder: "Seleziona qualcosa",
       //di default è true
       // autocomplete: false
     };
 
-    var pippo = new select("primo", pippo_data, pippo_config);
+    var pippo = new select("primo", pippo_data);
     var pluto = new select("secondo", pippo_data, pippo_config);
 
     // MODIFICA OPZIONI

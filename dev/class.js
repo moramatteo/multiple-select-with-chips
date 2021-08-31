@@ -1,6 +1,7 @@
 class select {
   constructor(querySelector, data, config) {
     this.select_name = querySelector;
+    if (!config) config = {};
     try {
       if (config.placeholder == undefined) config.placeholder = "Cerca";
       data_validator(this.select_name, data, "constructor");
@@ -9,7 +10,7 @@ class select {
       <div class="chips">
         ${html_chips}
       </div>
-      <input type="text" class="text-input mousetrap" placeholder="${
+      <input type="text" class="text-input add_personal_chip" placeholder="${
         config.placeholder
       }"
       onfocus="show_options_list($(this).attr('select_name'))" select_name="${querySelector}"
@@ -24,7 +25,7 @@ class select {
       //set config options
       if (config.add_personal_chip == false) {
         $(`[select_name=${querySelector}] .text-input`).removeClass(
-          "mousetrap"
+          "add_personal_chip"
         );
       }
       if (config.autocomplete == false) {
@@ -143,128 +144,13 @@ class select {
     return all_selected;
   }
 
-  //metodo per chiamare la funzione senza mettere come parametro il select_name
+  //method to call the function without putting the select_name as a parameter
   select_all() {
     select_all(this.select_name);
   }
 
-  //metodo per chiamare la funzione senza mettere come parametro il select_name
+  //method to call the function without putting the select_name as a parameter
   deselect_all(forced) {
     deselect_all(forced, this.select_name);
-  }
-}
-
-function select_all(select_name_arg) {
-  if (!select_name_arg) select_name_arg = select_name;
-  var options_number = $(
-    `[select_name=${select_name_arg}] .options-list`
-  ).children().length;
-  for (var i = 1; i < options_number + 1; i++) {
-    var div_in_use = `[select_name=${select_name_arg}] .options-list > div:nth-child(${i})`;
-    if ($(div_in_use).hasClass("select") == true) {
-      continue;
-    } else {
-      add_chip(
-        $(div_in_use),
-        $(div_in_use).first(),
-        $(div_in_use).attr("value"),
-        select_name_arg
-      );
-    }
-  }
-}
-
-function deselect_all(forced, select_name_arg) {
-  if (!select_name_arg) select_name_arg = select_name;
-  var options_number = $(
-    `[select_name=${select_name_arg}] .options-list`
-  ).children().length;
-  for (var i = 1; i < options_number + 1; i++) {
-    var div_in_use = `[select_name=${select_name_arg}] .options-list > div:nth-child(${i})`;
-    if ($(div_in_use).hasClass("select") == false) {
-      continue;
-    } else {
-      $(div_in_use).removeClass("select");
-      delete_chip($(div_in_use).attr("value"), select_name_arg);
-    }
-  }
-  if (forced == "forced") {
-    $(`[select_name=${select_name_arg}] .chips > div`).remove();
-  }
-}
-
-function data_validator(select_name, data, mod) {
-  var all_value = [];
-
-  if (mod == "enter") {
-    //chips check
-    var chips_number = $(`[select_name=${select_name}] .chips`).children()
-      .length;
-    for (var i = 1; i < chips_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] .chips > div:nth-child(${i})`;
-      var val = $(div_in_use).attr("value");
-      all_value.push(val);
-      if (all_value.includes(data)) {
-        throw "valore già selezionato";
-      }
-    }
-
-    //options' value check
-    var options_number = $(
-      `[select_name=${select_name}] .options-list`
-    ).children().length;
-    for (var i = 1; i < options_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
-      var val = $(div_in_use).attr("value");
-      all_value.push(val);
-      if (all_value.includes(data)) {
-        throw "c'è già una opzione con questo valore";
-      }
-    }
-  }
-
-  if (mod == "constructor" || mod == "replace") {
-    for (var i = 0; i < data.length; i++) {
-      //check if neither the text nor the value are missing
-      if (data[i].text == undefined || data[i].text == "")
-        throw `Non è stato impostato nessun testo per il valore "${data[i].value}"`;
-      if (data[i].value == undefined || data[i].value == "")
-        throw `Non è stato impostato nessun valore per il testo "${data[i].text}"`;
-
-      //check if there are no duplicate values
-      if (all_value.includes(data[i].value))
-        throw "Ci sono dei valori duplicati";
-      else all_value.push(data[i].value);
-    }
-  }
-
-  if (mod == "add") {
-    data_validator(select_name, data, "replace");
-
-    //aggiunge all'array tutti chips
-    var chips_number = $(`[select_name=${select_name}] .chips`).children()
-      .length;
-    for (var i = 1; i < chips_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] .chips > div:nth-child(${i})`;
-      var val = $(div_in_use).attr("value");
-      all_value.push(val);
-    }
-
-    //aggiunge all'array tutti i valori delle opzioni
-    var options_number = $(
-      `[select_name=${select_name}] .options-list`
-    ).children().length;
-    for (var i = 1; i < options_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
-      var val = $(div_in_use).attr("value");
-      all_value.push(val);
-    }
-
-    //controlla se ogni valore è presente nell'array
-    for (var i = 0; i < data.length; i++) {
-      if (all_value.includes(data[i].value)) {
-        throw "Ci sono dei valori duplicati";
-      }
-    }
   }
 }

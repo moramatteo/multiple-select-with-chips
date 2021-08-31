@@ -7,9 +7,7 @@
 - [Configuration](#Configuration)
 
 ## Prerequisites
-- [Jquery](https://jquery.com/download/)
-- [Mousetrap](https://github.com/ccampbell/mousetrap)
-- [Mousetrap pause/unpause plugin](https://github.com/ccampbell/mousetrap/tree/master/plugins/pause)
+- Per far funzionare correttamente il plugin c'è bisogno di [Jquery](https://jquery.com/download/)
 
 ## Installation
 - With cdnjs
@@ -66,7 +64,7 @@ Per personalizzare maggiormente puoi aggiungere un terzo attributo quando chiami
 var config {
  //di default è true
  add_personal_chip: false,
- //di default è ????
+ //di default è Cerca
  placeholder: "same text",
  //di default è true
  autocomplete: false
@@ -82,8 +80,6 @@ var config {
 <html lang="en">
   <head>
     <script src="jquery-3.5.1.js"></script>
-    <script src="mousetrap.min.js"></script>
-    <script src="mousetrap-pause.js"></script>
     <link rel="stylesheet" href="multiple_select_with_chips.css">
   </head>
   <body>
