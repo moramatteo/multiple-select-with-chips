@@ -1,6 +1,6 @@
 {
   "name": "multiple_select_with_chips",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Create a selector to select multiple options with live search",
   "main": "multiple_select_with_chips.min.js",
   "scripts": {
