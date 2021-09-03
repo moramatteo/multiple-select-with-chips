@@ -18,10 +18,12 @@ document.onclick = function (e) {
   if (old_select_name != new_select_name && old_select_name != undefined)
     $(`[select_name="${old_select_name}"] .options-list`).addClass("hide");
   for (var i = 0; i < e.path.length; i++) {
-    if (e.path[i].className == "multiple-select-chip") {
-      out = false;
-      old_select_name = new_select_name;
-      break;
+    if (e.path[i].className != undefined) {
+      if (e.path[i].className.includes("multiple-select-chip")) {
+        out = false;
+        old_select_name = new_select_name;
+        break;
+      }
     }
   }
   if (out) {
@@ -74,7 +76,9 @@ function onKeyPressed(e) {
   if (
     key == "Enter" &&
     $(`[select_name=${select_name}]  .text-input`).is(":focus") == true &&
-    $(`[select_name=${select_name}]  .text-input`).hasClass("add_personal_chip") == true
+    $(`[select_name=${select_name}]  .text-input`).hasClass(
+      "add_personal_chip"
+    ) == true
   ) {
     var value = $(`.text-input[select_name=${select_name}]`).val();
     if (value != "") {
