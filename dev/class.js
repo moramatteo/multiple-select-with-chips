@@ -32,6 +32,11 @@ class select {
         $(`[select_name=${querySelector}] .text-input`).removeAttr("onkeyup");
       }
 
+      if (typeof config.max_selections == "number")
+        select_catalog[this.select_name] = {
+          max_selections: config.max_selections,
+        };
+
       set_input_with();
     } catch (error) {
       alert(`errore nel selettore chiamato "${this.select_name}"\n${error}`);
@@ -112,6 +117,7 @@ class select {
       all: this.check_all_selected(),
       names: [],
       values: [],
+      added_values: [],
     };
     var chips_number = $(`[select_name=${this.select_name}] .chips`).children()
       .length;
@@ -125,6 +131,13 @@ class select {
         `[select_name=${this.select_name}] .chips > div:nth-child(${i}) > span:nth-child(2)`
       ).html();
       selected_info.names.push(text);
+
+      if (
+        $(`[select_name=${this.select_name}] .options-list > div[value=${val}]`)
+          .length == 0
+      ) {
+        selected_info.added_values.push(val);
+      }
     }
     return selected_info;
   }

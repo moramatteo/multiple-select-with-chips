@@ -1,4 +1,5 @@
 var select_name;
+var select_catalog = {};
 var delete_chip_function =
   "delete_chip($(this).attr('value'), $(this).attr('select_name'))";
 var add_chip_function =
@@ -34,6 +35,7 @@ document.onclick = function (e) {
 function add_chip(this_div, children, value, select_name_arg) {
   try {
     if (!select_name_arg) select_name_arg = select_name;
+    check_limit(select_name_arg);
     if (this_div != "") {
       //if the function is called by clicking the options
       var text = children[0].firstChild.nextSibling.innerText;
@@ -246,6 +248,14 @@ function data_validator(select_name, data, mod) {
       }
     }
   }
+}
+
+function check_limit(select_name_arg) {
+  var chips_number = $(`[select_name=${this.select_name}] .chips`).children()
+    .length;
+
+  var max_selections = select_catalog[select_name_arg].max_selections;
+  if (chips_number == max_selections) throw "Limite di elementi selezionabili raggiunto"
 }
 
 // SET THE WITH OF THE INPUT TEXT
