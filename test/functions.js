@@ -5,6 +5,85 @@ var delete_chip_function =
 var add_chip_function =
   "add_chip(this, $(this).first(), $(this).attr('value'))";
 
+// creates the HTML content of the chips in case there are pre-selected elements on loading
+function create_chips(select_name_arg, data) {
+  var html_content = ``;
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].select == true) {
+      html_content += `<div value="${data[i].value}">
+          <span>${data[i].text}</span>
+          <span class="delete-chip material-icons" value="${data[i].value}" select_name="${select_name_arg}" onclick="${delete_chip_function}">close</span>
+        </div>`;
+    }
+  }
+  return html_content;
+}
+
+//creates the HTML content of the options
+function create_options(select_name_arg, data) {
+  var html_content = "";
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].select == true) {
+      html_content += `<div class="option select" value="${data[i].value}" select_name="${select_name_arg}" onclick="${delete_chip_function}">`;
+    } else {
+      html_content += `<div class="option" value="${data[i].value}" select_name="${select_name_arg}" onclick="${add_chip_function}">`;
+    }
+    html_content += `
+          <div class="option-text">${data[i].text}</div>
+          <div class="check-mark">
+            <span class="material-icons-outlined">close</span>
+          </div>
+        </div>`;
+  }
+  return html_content;
+}
+
+function select_constructor(select_name_arg, data, config) {
+  if (!config) config = {};
+  try {
+    if (config.placeholder == undefined) config.placeholder = "Cerca";
+    data_validator(select_name_arg, data, "constructor");
+    var html_chips = create_chips(select_name_arg, data);
+    var html_content = `<div class="selected">
+      <div class="chips">
+        ${html_chips}
+      </div>
+      <input type="text" class="text-input add_personal_chip" placeholder="${
+        config.placeholder
+      }"
+      onfocus="show_options_list($(this).attr('select_name'))" select_name="${select_name_arg}"
+      onkeyup="options_filter(this.value)">
+    </div>
+    <div class="options-list hide">
+      ${create_options(select_name_arg, data)}
+    </div>`;
+
+    $(`[select_name=${select_name_arg}]`).append(html_content);
+
+    //set config options
+    if (config.add_personal_chip == false) {
+      $(`[select_name=${select_name_arg}] .text-input`).removeClass(
+        "add_personal_chip"
+      );
+    }
+    if (config.autocomplete == false) {
+      $(`[select_name=${select_name_arg}] .text-input`).removeAttr("onkeyup");
+    }
+
+    if (typeof config.max_selections == "number")
+      select_catalog[select_name_arg] = {
+        max_selections: config.max_selections,
+      };
+
+    set_input_with();
+  } catch (error) {
+    alert(`errore nel selettore chiamato "${select_name_arg}"\n${error}`);
+    $(`[select_name=${select_name_arg}]`).append(
+      "errore nell'inserimento delle opzioni"
+    );
+  }
+}
+
 function show_options_list(name) {
   $(`[select_name=${name}] > .options-list`).removeClass("hide");
   select_name = name;
@@ -93,6 +172,7 @@ function onKeyPressed(e) {
   }
 }
 
+//creates the HTML content of the options
 function options_filter(text) {
   if (text == "")
     //when the input field is empty, all options must be seen
@@ -133,6 +213,82 @@ function options_filter(text) {
   $(`[select_name=${select_name}] .option:not(.hide)`)
     .last()
     .addClass("bottom-border");
+}
+
+//adds new options
+function new_datas(select_name_arg, data, mod) {
+  // there are 2 ways to add new options:
+  // 1) mod == "replace" -> delete all other already existing options (DEFAULT)
+  // 2) mod == "add" -> adds new options to the end of existing ones
+  if (!mod) mod = "replace";
+
+  try {
+    data_validator(select_name_arg, data, mod);
+    var html_chips = create_chips(select_name_arg, data);
+    var html_options = create_options(select_name_arg, data);
+    if (mod == "replace") {
+      $(`[select_name=${select_name_arg}] .options-list`).replaceWith(
+        '<div class="options-list hide">' + html_options + "</div>"
+      );
+
+      $(`[select_name=${select_name_arg}] .chips > div`).remove();
+      $(`[select_name=${select_name_arg}] .chips`).append(` ${html_chips} `);
+    }
+    if (mod == "add") {
+      $(`[select_name=${select_name_arg}] .options-list`).append(html_options);
+      $(`[select_name=${select_name_arg}] .chips`).append(` ${html_chips} `);
+    }
+  } catch (error) {
+    alert(`errore nel selettore chiamato "${select_name_arg}"\n${error}`);
+    $(`[select_name=${select_name_arg}]`).replaceWith(
+      "errore nell'inserimento delle opzioni"
+    );
+  }
+}
+
+function get_value(select_name_arg) {
+  var selected_info = {
+    all: check_all_selected(),
+    names: [],
+    values: [],
+    added_values: [],
+  };
+  var chips_number = $(`[select_name=${select_name_arg}] .chips`).children()
+    .length;
+  for (var i = 1; i < chips_number + 1; i++) {
+    var val = $(
+      `[select_name=${select_name_arg}] .chips > div:nth-child(${i})`
+    ).attr("value");
+    selected_info.values.push(val);
+
+    var text = $(
+      `[select_name=${select_name_arg}] .chips > div:nth-child(${i}) > span:nth-child(2)`
+    ).html();
+    selected_info.names.push(text);
+
+    if (
+      $(`[select_name=${select_name_arg}] .options-list > div[value=${val}]`)
+        .length == 0
+    ) {
+      selected_info.added_values.push(val);
+    }
+  }
+  return selected_info;
+}
+
+function check_all_selected(select_name_arg) {
+  var all_selected = true;
+  var options_number = $(
+    `[select_name=${select_name_arg}] .options-list`
+  ).children().length;
+  for (var i = 1; i < options_number + 1; i++) {
+    var div_in_use = `[select_name=${select_name_arg}] .options-list > div:nth-child(${i})`;
+    if ($(div_in_use).hasClass("select") == false) {
+      all_selected = false;
+      break;
+    }
+  }
+  return all_selected;
 }
 
 function select_all(select_name_arg) {
@@ -255,12 +411,13 @@ function check_limit(select_name_arg) {
     .length;
 
   var max_selections = select_catalog[select_name_arg].max_selections;
-  if (chips_number == max_selections) throw "Limite di elementi selezionabili raggiunto"
+  if (chips_number == max_selections)
+    throw "Limite di elementi selezionabili raggiunto";
 }
 
 // SET THE WITH OF THE INPUT TEXT
 function set_input_with() {
-  var options_number = $(`div[select_name]`).length;
+  var options_number = $(`div.multiple-select-chip[select_name]`).length;
   for (var i = 0; i < options_number; i++) {
     var chips_width = $(`div[select_name]:eq(${i}) .chips`).width();
     var selected_width = $(`div[select_name]:eq(${i}) .selected`).width();
