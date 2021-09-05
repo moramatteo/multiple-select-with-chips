@@ -419,13 +419,13 @@ function check_limit(select_name_arg) {
 function set_input_with() {
   var options_number = $(`div.multiple-select-chip[select_name]`).length;
   for (var i = 0; i < options_number; i++) {
-    var chips_width = $(`div[select_name]:eq(${i}) .chips`).width();
-    var selected_width = $(`div[select_name]:eq(${i}) .selected`).width();
+    var chips_width = $(`div.multiple-select-chip[select_name]:eq(${i}) .chips`).width();
+    var selected_width = $(`div.multiple-select-chip[select_name]:eq(${i}) .selected`).width();
     var delta_width = selected_width - chips_width;
     if (delta_width > 100) {
-      $(`div[select_name]:eq(${i}) .text-input`).css("width", delta_width);
+      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css("width", delta_width);
     } else {
-      $(`div[select_name]:eq(${i}) .text-input`).css("width", "100px");
+      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css("width", "100px");
     }
   }
 }
