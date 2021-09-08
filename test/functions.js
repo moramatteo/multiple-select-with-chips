@@ -50,9 +50,9 @@ function select_constructor(select_name_arg, data, config) {
       </div>
       <input type="text" class="text-input add_personal_chip" placeholder="${
         config.placeholder
-      }"
-      onfocus="show_options_list($(this).attr('select_name'))" select_name="${select_name_arg}"
-      onkeyup="options_filter(this.value)">
+      }" select_name="${select_name_arg}"
+      onfocus="show_options_list($(this).attr('select_name'))" 
+      onkeyup="options_filter($(this).attr('select_name'), this.value)">
     </div>
     <div class="options-list hide">
       ${create_options(select_name_arg, data)}
@@ -70,11 +70,17 @@ function select_constructor(select_name_arg, data, config) {
       $(`[select_name=${select_name_arg}] .text-input`).removeAttr("onkeyup");
     }
 
+    select_catalog[select_name_arg] = {};
     if (typeof config.max_selections == "number")
-      select_catalog[select_name_arg] = {
-        max_selections: config.max_selections,
-      };
+      select_catalog[select_name_arg].max_selections = config.max_selections;
 
+    if (config.onchange != undefined && config.onchange != "")
+      select_catalog[select_name_arg]["onchange"] = config.onchange;
+
+    if (config.onkeyup != undefined && config.onkeyup != "")
+      select_catalog[select_name_arg]["onkeyup"] = config.onkeyup;
+      
+    //css
     set_input_with();
   } catch (error) {
     alert(`errore nel selettore chiamato "${select_name_arg}"\n${error}`);
@@ -134,7 +140,11 @@ function add_chip(this_div, children, value, select_name_arg) {
 
     $(this_div).attr("onclick", `${delete_chip_function}`);
 
+    //css
     set_input_with();
+    //call a personal function
+    if (select_catalog[select_name_arg].onchange != undefined)
+      window[select_catalog[select_name_arg].onchange]();
   } catch (error) {
     alert(error);
   }
@@ -147,11 +157,14 @@ function delete_chip(value, select_name_arg) {
     .removeClass("select")
     .attr("onclick", add_chip_function);
 
+  //call a personal function
+  if (select_catalog[select_name_arg].onchange != undefined)
+    window[select_catalog[select_name_arg].onchange]();
+  //css
   set_input_with();
 }
 
 document.addEventListener("keydown", onKeyPressed);
-
 function onKeyPressed(e) {
   var key = e.key;
   if (
@@ -173,7 +186,7 @@ function onKeyPressed(e) {
 }
 
 //creates the HTML content of the options
-function options_filter(text) {
+function options_filter(select_name_arg, text) {
   if (text == "")
     //when the input field is empty, all options must be seen
     $(`[select_name=${select_name}] .option`).removeClass("hide");
@@ -202,17 +215,21 @@ function options_filter(text) {
       }
     }
   }
+
+  //css
   $(`[select_name=${select_name}] .option`).removeClass(
     "top-border bottom-border"
   );
-
   $(`[select_name=${select_name}] .option:not(.hide)`)
     .first()
     .addClass("top-border");
-
   $(`[select_name=${select_name}] .option:not(.hide)`)
     .last()
     .addClass("bottom-border");
+
+  // call a personal function
+  if (select_catalog[select_name_arg].onkeyup != undefined)
+    window[select_catalog[select_name_arg].onkeyup]();
 }
 
 //adds new options
@@ -311,7 +328,7 @@ function select_all(select_name_arg) {
   }
 }
 
-function deselect_all(forced, select_name_arg) {
+function deselect_all(select_name_arg, forced) {
   if (!select_name_arg) select_name_arg = select_name;
   var options_number = $(
     `[select_name=${select_name_arg}] .options-list`
@@ -419,13 +436,23 @@ function check_limit(select_name_arg) {
 function set_input_with() {
   var options_number = $(`div.multiple-select-chip[select_name]`).length;
   for (var i = 0; i < options_number; i++) {
-    var chips_width = $(`div.multiple-select-chip[select_name]:eq(${i}) .chips`).width();
-    var selected_width = $(`div.multiple-select-chip[select_name]:eq(${i}) .selected`).width();
+    var chips_width = $(
+      `div.multiple-select-chip[select_name]:eq(${i}) .chips`
+    ).width();
+    var selected_width = $(
+      `div.multiple-select-chip[select_name]:eq(${i}) .selected`
+    ).width();
     var delta_width = selected_width - chips_width;
     if (delta_width > 100) {
-      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css("width", delta_width);
+      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css(
+        "width",
+        delta_width
+      );
     } else {
-      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css("width", "100px");
+      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css(
+        "width",
+        "100px"
+      );
     }
   }
 }

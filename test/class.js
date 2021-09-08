@@ -31,6 +31,6 @@ class select {
   }
 
   deselect_all(forced) {
-    deselect_all(forced, this.select_name);
+    deselect_all(this.select_name, forced);
   }
 }

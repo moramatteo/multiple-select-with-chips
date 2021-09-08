@@ -47,13 +47,15 @@
     ];
 
     var pippo_config = {
-      //di default è true
+      //[true/false] di default è true
       add_personal_chip: true,
       //di default è Cerca
-      // placeholder: "Seleziona qualcosa",
-      //di default è true
-      // autocomplete: false
-      max_selections: 2
+      placeholder: "Seleziona qualcosa",
+      //[true/false] di default è true
+      autocomplete: true,
+      max_selections: 2,
+      onchange: "change",
+      onkeyup: "type",
     };
 
     var pippo = new select("primo", pippo_data, pippo_config);
@@ -67,6 +69,14 @@
       // { text: "prova3", value: "val3" },
     ];
     pippo.new_data(new_data, "add");
+
+    function change() {
+      alert("change")
+    }
+
+    function type() {
+      alert("type")
+    }
   </script>
 </body>
 
