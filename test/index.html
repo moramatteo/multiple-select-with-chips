@@ -26,8 +26,7 @@
   <br>
   <br>
   <div class="multiple-select-chip" select_name="secondo"></div>
-  <script src="functions.js"></script>
-  <script src="class.js"></script>
+  <script src="index.js"></script>
   <script>
     // CREA NUOVO
     var pippo_data = [
@@ -70,12 +69,12 @@
     ];
     pippo.new_data(new_data, "add");
 
-    function change() {
-      alert("change")
+    function change(select_name_arg, mod, value) {
+      alert("change: " + select_name_arg + " = " + mod + " con valore " + value)
     }
 
-    function type() {
-      alert("type")
+    function type(select_name_arg, text) {
+      alert("type: " + select_name_arg + " = " + text)
     }
   </script>
 </body>

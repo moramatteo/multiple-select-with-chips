@@ -144,7 +144,11 @@ function add_chip(this_div, children, value, select_name_arg) {
     set_input_with();
     //call a personal function
     if (select_catalog[select_name_arg].onchange != undefined)
-      window[select_catalog[select_name_arg].onchange]();
+      window[select_catalog[select_name_arg].onchange](
+        select_name_arg,
+        "add",
+        value
+      );
   } catch (error) {
     alert(error);
   }
@@ -159,7 +163,11 @@ function delete_chip(value, select_name_arg) {
 
   //call a personal function
   if (select_catalog[select_name_arg].onchange != undefined)
-    window[select_catalog[select_name_arg].onchange]();
+    window[select_catalog[select_name_arg].onchange](
+      select_name_arg,
+      "remove",
+      value
+    );
   //css
   set_input_with();
 }
@@ -229,7 +237,7 @@ function options_filter(select_name_arg, text) {
 
   // call a personal function
   if (select_catalog[select_name_arg].onkeyup != undefined)
-    window[select_catalog[select_name_arg].onkeyup]();
+    window[select_catalog[select_name_arg].onkeyup](select_name_arg, text);
 }
 
 //adds new options
@@ -248,8 +256,9 @@ function new_datas(select_name_arg, data, mod) {
         '<div class="options-list hide">' + html_options + "</div>"
       );
 
-      $(`[select_name=${select_name_arg}] .chips > div`).remove();
-      $(`[select_name=${select_name_arg}] .chips`).append(` ${html_chips} `);
+      $(`[select_name=${select_name_arg}] .chips`)
+        .empty()
+        .append(` ${html_chips}`);
     }
     if (mod == "add") {
       $(`[select_name=${select_name_arg}] .options-list`).append(html_options);
@@ -343,7 +352,7 @@ function deselect_all(select_name_arg, forced) {
     }
   }
   if (forced == "forced") {
-    $(`[select_name=${select_name_arg}] .chips > div`).remove();
+    $(`[select_name=${select_name_arg}] .chips`).empty();
   }
 }
 
@@ -431,36 +440,6 @@ function check_limit(select_name_arg) {
   if (chips_number == max_selections)
     throw "Limite di elementi selezionabili raggiunto";
 }
-
-// SET THE WITH OF THE INPUT TEXT
-function set_input_with() {
-  var options_number = $(`div.multiple-select-chip[select_name]`).length;
-  for (var i = 0; i < options_number; i++) {
-    var chips_width = $(
-      `div.multiple-select-chip[select_name]:eq(${i}) .chips`
-    ).width();
-    var selected_width = $(
-      `div.multiple-select-chip[select_name]:eq(${i}) .selected`
-    ).width();
-    var delta_width = selected_width - chips_width;
-    if (delta_width > 100) {
-      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css(
-        "width",
-        delta_width
-      );
-    } else {
-      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css(
-        "width",
-        "100px"
-      );
-    }
-  }
-}
-
-$(window).resize(function () {
-  set_input_with();
-});
-
 class select {
   //method to call the function without putting the select_name as a parameter
 
@@ -497,3 +476,32 @@ class select {
     deselect_all(this.select_name, forced);
   }
 }
+
+// SET THE WITH OF THE INPUT TEXT
+function set_input_with() {
+  var options_number = $(`div.multiple-select-chip[select_name]`).length;
+  for (var i = 0; i < options_number; i++) {
+    var chips_width = $(
+      `div.multiple-select-chip[select_name]:eq(${i}) .chips`
+    ).width();
+    var selected_width = $(
+      `div.multiple-select-chip[select_name]:eq(${i}) .selected`
+    ).width();
+    var delta_width = selected_width - chips_width;
+    if (delta_width > 100) {
+      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css(
+        "width",
+        delta_width
+      );
+    } else {
+      $(`div.multiple-select-chip[select_name]:eq(${i}) .text-input`).css(
+        "width",
+        "100px"
+      );
+    }
+  }
+}
+
+$(window).resize(function () {
+  set_input_with();
+});

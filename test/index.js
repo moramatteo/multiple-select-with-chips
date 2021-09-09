@@ -144,7 +144,11 @@ function add_chip(this_div, children, value, select_name_arg) {
     set_input_with();
     //call a personal function
     if (select_catalog[select_name_arg].onchange != undefined)
-      window[select_catalog[select_name_arg].onchange]();
+      window[select_catalog[select_name_arg].onchange](
+        select_name_arg,
+        "add",
+        value
+      );
   } catch (error) {
     alert(error);
   }
@@ -159,7 +163,11 @@ function delete_chip(value, select_name_arg) {
 
   //call a personal function
   if (select_catalog[select_name_arg].onchange != undefined)
-    window[select_catalog[select_name_arg].onchange]();
+    window[select_catalog[select_name_arg].onchange](
+      select_name_arg,
+      "remove",
+      value
+    );
   //css
   set_input_with();
 }
@@ -229,7 +237,7 @@ function options_filter(select_name_arg, text) {
 
   // call a personal function
   if (select_catalog[select_name_arg].onkeyup != undefined)
-    window[select_catalog[select_name_arg].onkeyup]();
+    window[select_catalog[select_name_arg].onkeyup](select_name_arg, text);
 }
 
 //adds new options
@@ -248,8 +256,9 @@ function new_datas(select_name_arg, data, mod) {
         '<div class="options-list hide">' + html_options + "</div>"
       );
 
-      $(`[select_name=${select_name_arg}] .chips > div`).remove();
-      $(`[select_name=${select_name_arg}] .chips`).append(` ${html_chips} `);
+      $(`[select_name=${select_name_arg}] .chips`)
+        .empty()
+        .append(` ${html_chips}`);
     }
     if (mod == "add") {
       $(`[select_name=${select_name_arg}] .options-list`).append(html_options);
@@ -343,7 +352,7 @@ function deselect_all(select_name_arg, forced) {
     }
   }
   if (forced == "forced") {
-    $(`[select_name=${select_name_arg}] .chips > div`).remove();
+    $(`[select_name=${select_name_arg}] .chips`).empty();
   }
 }
 
@@ -430,6 +439,42 @@ function check_limit(select_name_arg) {
   var max_selections = select_catalog[select_name_arg].max_selections;
   if (chips_number == max_selections)
     throw "Limite di elementi selezionabili raggiunto";
+}
+class select {
+  //method to call the function without putting the select_name as a parameter
+
+  constructor(querySelector, data, config) {
+    this.select_name = querySelector;
+    select_constructor(this.select_name, data, config);
+  }
+
+  create_chips(data) {
+    create_chips(this.select_name, data);
+  }
+
+  create_options(data) {
+    create_options(this.select_name, data);
+  }
+
+  new_data(data, mod) {
+    new_datas(this.select_name, data, mod);
+  }
+
+  get_value() {
+    get_value(this.select_name);
+  }
+
+  check_all_selected() {
+    check_all_selected(this.select_name);
+  }
+
+  select_all() {
+    select_all(this.select_name);
+  }
+
+  deselect_all(forced) {
+    deselect_all(this.select_name, forced);
+  }
 }
 
 // SET THE WITH OF THE INPUT TEXT
