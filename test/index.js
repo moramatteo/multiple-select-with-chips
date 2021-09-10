@@ -58,16 +58,16 @@ function select_constructor(select_name_arg, data, config) {
       ${create_options(select_name_arg, data)}
     </div>`;
 
-    $(`[select_name=${select_name_arg}]`).append(html_content);
+    $(`[select_name='${select_name_arg}']`).append(html_content);
 
     //set config options
     if (config.add_personal_chip == false) {
-      $(`[select_name=${select_name_arg}] .text-input`).removeClass(
+      $(`[select_name='${select_name_arg}'] .text-input`).removeClass(
         "add_personal_chip"
       );
     }
     if (config.autocomplete == false) {
-      $(`[select_name=${select_name_arg}] .text-input`).removeAttr("onkeyup");
+      $(`[select_name='${select_name_arg}'] .text-input`).removeAttr("onkeyup");
     }
 
     select_catalog[select_name_arg] = {};
@@ -84,14 +84,14 @@ function select_constructor(select_name_arg, data, config) {
     set_input_with();
   } catch (error) {
     alert(`errore nel selettore chiamato "${select_name_arg}"\n${error}`);
-    $(`[select_name=${select_name_arg}]`).append(
+    $(`[select_name='${select_name_arg}']`).append(
       "errore nell'inserimento delle opzioni"
     );
   }
 }
 
 function show_options_list(name) {
-  $(`[select_name=${name}] > .options-list`).removeClass("hide");
+  $(`[select_name='${name}'] > .options-list`).removeClass("hide");
   select_name = name;
 }
 
@@ -131,7 +131,7 @@ function add_chip(this_div, children, value, select_name_arg) {
       data_validator(select_name_arg, text, "enter");
     }
 
-    $(`[select_name=${select_name_arg}] .chips`).append(`
+    $(`[select_name='${select_name_arg}'] .chips`).append(`
     <div value="${value}">
       <span>${text}</span>
       <span class="delete-chip material-icons" value="${value}" select_name="${select_name_arg}" onclick="${delete_chip_function}">close</span>
@@ -155,9 +155,9 @@ function add_chip(this_div, children, value, select_name_arg) {
 }
 
 function delete_chip(value, select_name_arg) {
-  $(`[select_name=${select_name_arg}] .chips > div[value="${value}"]`).remove();
+  $(`[select_name='${select_name_arg}'] .chips > div[value="${value}"]`).remove();
 
-  $(`[select_name=${select_name_arg}] .option[value="${value}"]`)
+  $(`[select_name='${select_name_arg}'] .option[value="${value}"]`)
     .removeClass("select")
     .attr("onclick", add_chip_function);
 
@@ -177,18 +177,18 @@ function onKeyPressed(e) {
   var key = e.key;
   if (
     key == "Enter" &&
-    $(`[select_name=${select_name}]  .text-input`).is(":focus") == true &&
-    $(`[select_name=${select_name}]  .text-input`).hasClass(
+    $(`[select_name='${select_name}']  .text-input`).is(":focus") == true &&
+    $(`[select_name='${select_name}']  .text-input`).hasClass(
       "add_personal_chip"
     ) == true
   ) {
-    var value = $(`.text-input[select_name=${select_name}]`).val();
+    var value = $(`.text-input[select_name='${select_name}']`).val();
     if (value != "") {
       $(".text-input").val("").blur();
       add_chip("", "", value);
       // after typing, make the options visible for later viewing
-      $(`[select_name=${select_name}] .option`).removeClass("hide");
-      $(`[select_name=${select_name}] .options-list`).addClass("hide");
+      $(`[select_name='${select_name}'] .option`).removeClass("hide");
+      $(`[select_name='${select_name}'] .options-list`).addClass("hide");
     }
   }
 }
@@ -197,27 +197,27 @@ function onKeyPressed(e) {
 function options_filter(select_name_arg, text) {
   if (text == "")
     //when the input field is empty, all options must be seen
-    $(`[select_name=${select_name}] .option`).removeClass("hide");
+    $(`[select_name='${select_name}'] .option`).removeClass("hide");
   else {
     var options_number = $(
-      `[select_name=${select_name}] .options-list`
+      `[select_name='${select_name}'] .options-list`
     ).children().length;
     //initial value of the loop variable = 1 because the first child has a value of 1
     for (var i = 1; i < options_number + 1; i++) {
       if (
         //compares the text of each option with the input text
-        $(`[select_name=${select_name}] .option:nth-child(${i}) > .option-text`)
+        $(`[select_name='${select_name}'] .option:nth-child(${i}) > .option-text`)
           .html()
           .toLowerCase()
           .indexOf(text.toLowerCase()) == -1
       ) {
         // if there is no match
-        $(`[select_name=${select_name}] .option:nth-child(${i})`).addClass(
+        $(`[select_name='${select_name}'] .option:nth-child(${i})`).addClass(
           "hide"
         );
       } else {
         //if there is a match
-        $(`[select_name=${select_name}] .option:nth-child(${i})`).removeClass(
+        $(`[select_name='${select_name}'] .option:nth-child(${i})`).removeClass(
           "hide"
         );
       }
@@ -225,13 +225,13 @@ function options_filter(select_name_arg, text) {
   }
 
   //css
-  $(`[select_name=${select_name}] .option`).removeClass(
+  $(`[select_name='${select_name}'] .option`).removeClass(
     "top-border bottom-border"
   );
-  $(`[select_name=${select_name}] .option:not(.hide)`)
+  $(`[select_name='${select_name}'] .option:not(.hide)`)
     .first()
     .addClass("top-border");
-  $(`[select_name=${select_name}] .option:not(.hide)`)
+  $(`[select_name='${select_name}'] .option:not(.hide)`)
     .last()
     .addClass("bottom-border");
 
@@ -252,21 +252,21 @@ function new_datas(select_name_arg, data, mod) {
     var html_chips = create_chips(select_name_arg, data);
     var html_options = create_options(select_name_arg, data);
     if (mod == "replace") {
-      $(`[select_name=${select_name_arg}] .options-list`).replaceWith(
+      $(`[select_name='${select_name_arg}'] .options-list`).replaceWith(
         '<div class="options-list hide">' + html_options + "</div>"
       );
 
-      $(`[select_name=${select_name_arg}] .chips`)
+      $(`[select_name='${select_name_arg}'] .chips`)
         .empty()
-        .append(` ${html_chips}`);
+        .append(`${html_chips}`);
     }
     if (mod == "add") {
-      $(`[select_name=${select_name_arg}] .options-list`).append(html_options);
-      $(`[select_name=${select_name_arg}] .chips`).append(` ${html_chips} `);
+      $(`[select_name='${select_name_arg}'] .options-list`).append(html_options);
+      $(`[select_name='${select_name_arg}'] .chips`).append(`${html_chips} `);
     }
   } catch (error) {
-    alert(`errore nel selettore chiamato "${select_name_arg}"\n${error}`);
-    $(`[select_name=${select_name_arg}]`).replaceWith(
+    alert(`errore nel selettore chiamato ${select_name_arg}\n${error}`);
+    $(`[select_name='${select_name_arg}']`).replaceWith(
       "errore nell'inserimento delle opzioni"
     );
   }
@@ -279,21 +279,21 @@ function get_value(select_name_arg) {
     values: [],
     added_values: [],
   };
-  var chips_number = $(`[select_name=${select_name_arg}] .chips`).children()
+  var chips_number = $(`[select_name='${select_name_arg}'] .chips`).children()
     .length;
   for (var i = 1; i < chips_number + 1; i++) {
     var val = $(
-      `[select_name=${select_name_arg}] .chips > div:nth-child(${i})`
+      `[select_name='${select_name_arg}'] .chips > div:nth-child(${i})`
     ).attr("value");
     selected_info.values.push(val);
 
     var text = $(
-      `[select_name=${select_name_arg}] .chips > div:nth-child(${i}) > span:nth-child(2)`
+      `[select_name='${select_name_arg}'] .chips > div:nth-child(${i}) > span:nth-child(2)`
     ).html();
     selected_info.names.push(text);
 
     if (
-      $(`[select_name=${select_name_arg}] .options-list > div[value=${val}]`)
+      $(`[select_name='${select_name_arg}'] .options-list > div[value='${val}']`)
         .length == 0
     ) {
       selected_info.added_values.push(val);
@@ -305,10 +305,10 @@ function get_value(select_name_arg) {
 function check_all_selected(select_name_arg) {
   var all_selected = true;
   var options_number = $(
-    `[select_name=${select_name_arg}] .options-list`
+    `[select_name='${select_name_arg}'] .options-list`
   ).children().length;
   for (var i = 1; i < options_number + 1; i++) {
-    var div_in_use = `[select_name=${select_name_arg}] .options-list > div:nth-child(${i})`;
+    var div_in_use = `[select_name='${select_name_arg}'] .options-list > div:nth-child(${i})`;
     if ($(div_in_use).hasClass("select") == false) {
       all_selected = false;
       break;
@@ -320,10 +320,10 @@ function check_all_selected(select_name_arg) {
 function select_all(select_name_arg) {
   if (!select_name_arg) select_name_arg = select_name;
   var options_number = $(
-    `[select_name=${select_name_arg}] .options-list`
+    `[select_name='${select_name_arg}'] .options-list`
   ).children().length;
   for (var i = 1; i < options_number + 1; i++) {
-    var div_in_use = `[select_name=${select_name_arg}] .options-list > div:nth-child(${i})`;
+    var div_in_use = `[select_name='${select_name_arg}'] .options-list > div:nth-child(${i})`;
     if ($(div_in_use).hasClass("select") == true) {
       continue;
     } else {
@@ -340,10 +340,10 @@ function select_all(select_name_arg) {
 function deselect_all(select_name_arg, forced) {
   if (!select_name_arg) select_name_arg = select_name;
   var options_number = $(
-    `[select_name=${select_name_arg}] .options-list`
+    `[select_name='${select_name_arg}'] .options-list`
   ).children().length;
   for (var i = 1; i < options_number + 1; i++) {
-    var div_in_use = `[select_name=${select_name_arg}] .options-list > div:nth-child(${i})`;
+    var div_in_use = `[select_name='${select_name_arg}'] .options-list > div:nth-child(${i})`;
     if ($(div_in_use).hasClass("select") == false) {
       continue;
     } else {
@@ -352,7 +352,7 @@ function deselect_all(select_name_arg, forced) {
     }
   }
   if (forced == "forced") {
-    $(`[select_name=${select_name_arg}] .chips`).empty();
+    $(`[select_name='${select_name_arg}'] .chips`).empty();
   }
 }
 
@@ -361,10 +361,10 @@ function data_validator(select_name, data, mod) {
 
   if (mod == "enter") {
     //chips check
-    var chips_number = $(`[select_name=${select_name}] .chips`).children()
+    var chips_number = $(`[select_name='${select_name}'] .chips`).children()
       .length;
     for (var i = 1; i < chips_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] .chips > div:nth-child(${i})`;
+      var div_in_use = `[select_name='${select_name}'] .chips > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");
       all_value.push(val);
       if (all_value.includes(data)) {
@@ -374,10 +374,10 @@ function data_validator(select_name, data, mod) {
 
     //options' value check
     var options_number = $(
-      `[select_name=${select_name}] .options-list`
+      `[select_name='${select_name}'] .options-list`
     ).children().length;
     for (var i = 1; i < options_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
+      var div_in_use = `[select_name='${select_name}'] .options-list > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");
       all_value.push(val);
       if (all_value.includes(data)) {
@@ -405,20 +405,20 @@ function data_validator(select_name, data, mod) {
     data_validator(select_name, data, "replace");
 
     //aggiunge all'array tutti chips
-    var chips_number = $(`[select_name=${select_name}] .chips`).children()
+    var chips_number = $(`[select_name='${select_name}'] .chips`).children()
       .length;
     for (var i = 1; i < chips_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] .chips > div:nth-child(${i})`;
+      var div_in_use = `[select_name='${select_name}'] .chips > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");
       all_value.push(val);
     }
 
     //aggiunge all'array tutti i valori delle opzioni
     var options_number = $(
-      `[select_name=${select_name}] .options-list`
+      `[select_name='${select_name}'] .options-list`
     ).children().length;
     for (var i = 1; i < options_number + 1; i++) {
-      var div_in_use = `[select_name=${select_name}] .options-list > div:nth-child(${i})`;
+      var div_in_use = `[select_name='${select_name}'] .options-list > div:nth-child(${i})`;
       var val = $(div_in_use).attr("value");
       all_value.push(val);
     }
@@ -433,7 +433,7 @@ function data_validator(select_name, data, mod) {
 }
 
 function check_limit(select_name_arg) {
-  var chips_number = $(`[select_name=${this.select_name}] .chips`).children()
+  var chips_number = $(`[select_name='${this.select_name}'] .chips`).children()
     .length;
 
   var max_selections = select_catalog[select_name_arg].max_selections;
@@ -461,7 +461,7 @@ class select {
   }
 
   get_value() {
-    get_value(this.select_name);
+    return get_value(this.select_name);
   }
 
   check_all_selected() {
