@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+:root {
+  --input_height : 3em
+}
+
 [select_name] ::-webkit-scrollbar {
   height: 2px;
   width: 5px;
@@ -28,14 +32,13 @@ body {
 
 .multiple-select-chip {
   position: relative;
-  width: 200px;
   display: flex;
   flex-direction: column;
 }
 
 .selected {
   position: relative;
-  height: 50px;
+  height: var(--input_height);
   display: flex;
   flex-direction: row;
   border-bottom: 1px blue solid;
@@ -56,19 +59,17 @@ body {
 .chips > div {
   background-color: #e0e0e0;
   position: relative;
-  margin-left: 5px;
-  height: 30px;
+  margin-left: .8em;
+  height: 1.5em;
   top: 50%;
   transform: translateY(-50%);
-  padding-top: 9px;
-  padding-bottom: 11px;
-  padding-left: 12px;
-  padding-right: 8px;
+  padding: 1em .5em;
   display: flex;
   flex-direction: row;
   align-items: center;
   border-radius: 20px;
   transition-duration: 0.5s;
+  width: max-content;
 }
 
 .chips > div:hover {
@@ -76,17 +77,16 @@ body {
 }
 
 .chips > div > span {
-  margin-left: 3px;
-  margin-right: 3px;
+  margin: 0 .2em;
 }
 
 .delete-chip {
   cursor: pointer;
   color: #e0e0e0;
-  font-size: 0.9em;
+  font-size: .7em;
   border-radius: 100%;
   background-color: #929292;
-  transition-duration: 0.5s;
+  transition-duration: .5s;
 }
 
 .delete-chip:hover {
@@ -94,11 +94,11 @@ body {
 }
 
 .text-input {
-  height: 35px;
+  height: var(--input_height);
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  margin-left: 5px;
+  margin-left: .8em;
   border: none;
   outline: 0px;
   background-color: #f0f0f0;
@@ -108,25 +108,22 @@ body {
   position: absolute;
   box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%),
     0 1px 10px 0 rgb(0 0 0 / 12%);
-  max-height: 150px;
+  max-height: 9em;
   width: 100%;
-  top: 50px;
+  top: var(--input_height);
   overflow-y: auto;
   background-color: white;
   z-index: 9999;
 }
 
 .option {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 1em 2em;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  transition-duration: 0.3s;
+  transition-duration: .3s;
 }
 
 .option:hover {
