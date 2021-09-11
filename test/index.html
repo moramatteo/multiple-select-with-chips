@@ -15,6 +15,10 @@
     .multiple-select-chip {
       width: 100%;
     }
+
+    /* * {
+      font-size: 5px;
+    } */
   </style>
 </head>
 
@@ -70,11 +74,11 @@
     pippo.new_data(new_data, "add");
 
     function change(select_name_arg, mod, value) {
-      alert("change: " + select_name_arg + " = " + mod + " con valore " + value)
+      console.log("change: " + select_name_arg + " = " + mod + " con valore " + value)
     }
 
     function type(select_name_arg, text) {
-      alert("type: " + select_name_arg + " = " + text)
+      console.log("type: " + select_name_arg + " = " + text)
     }
   </script>
 </body>
