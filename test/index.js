@@ -456,7 +456,7 @@ class select {
     create_options(this.select_name, data);
   }
 
-  new_data(data, mod) {
+  new_datas(data, mod) {
     new_datas(this.select_name, data, mod);
   }
 
