@@ -5,6 +5,17 @@ var delete_chip_function =
 var add_chip_function =
   "add_chip(this, $(this).first(), $(this).attr('value'))";
 
+var mobile;
+if (
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
+) {
+  mobile = true;
+} else {
+  mobile = false;
+}
+
 // creates the HTML content of the chips in case there are pre-selected elements on loading
 function create_chips(select_name_arg, data) {
   var html_content = ``;
@@ -52,7 +63,8 @@ function select_constructor(select_name_arg, data, config) {
         config.placeholder
       }" select_name="${select_name_arg}"
       onfocus="show_options_list($(this).attr('select_name'))" 
-      onkeyup="options_filter($(this).attr('select_name'), this.value)">
+      onkeyup="options_filter($(this).attr('select_name'), this.value)"
+      onfocusout="focus_out($(this).attr('select_name'), this.value)">
     </div>
     <div class="options-list hide">
       ${create_options(select_name_arg, data)}
@@ -91,6 +103,7 @@ function select_constructor(select_name_arg, data, config) {
 }
 
 function show_options_list(name) {
+  $(".options-list").addClass('hide');
   $(`[select_name='${name}'] > .options-list`).removeClass("hide");
   select_name = name;
 }
@@ -140,6 +153,9 @@ function add_chip(this_div, children, value, select_name_arg) {
 
     $(this_div).attr("onclick", `${delete_chip_function}`);
 
+    //clear the input field
+    $(`[select_name='${select_name_arg}'] input`).val("");
+
     //css
     set_input_with();
     //call a personal function
@@ -151,6 +167,13 @@ function add_chip(this_div, children, value, select_name_arg) {
       );
   } catch (error) {
     alert(error);
+  }
+}
+
+function focus_out(select_name_arg, text) {
+  if (mobile === true && text != "") {
+    $(`[select_name="${select_name_arg}"] .options-list`).addClass("hide");
+    add_chip("", "", text, select_name_arg);
   }
 }
 
