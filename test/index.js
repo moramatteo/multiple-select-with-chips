@@ -79,7 +79,7 @@ function select_constructor(select_name_arg, data, config) {
 
     if (config.onkeyup != undefined && config.onkeyup != "")
       select_catalog[select_name_arg]["onkeyup"] = config.onkeyup;
-      
+
     //css
     set_input_with();
   } catch (error) {
@@ -155,7 +155,9 @@ function add_chip(this_div, children, value, select_name_arg) {
 }
 
 function delete_chip(value, select_name_arg) {
-  $(`[select_name='${select_name_arg}'] .chips > div[value="${value}"]`).remove();
+  $(
+    `[select_name='${select_name_arg}'] .chips > div[value="${value}"]`
+  ).remove();
 
   $(`[select_name='${select_name_arg}'] .option[value="${value}"]`)
     .removeClass("select")
@@ -176,7 +178,7 @@ document.addEventListener("keydown", onKeyPressed);
 function onKeyPressed(e) {
   var key = e.key;
   if (
-    key == "Enter" &&
+    (key == "Enter" || key == "Tab") &&
     $(`[select_name='${select_name}']  .text-input`).is(":focus") == true &&
     $(`[select_name='${select_name}']  .text-input`).hasClass(
       "add_personal_chip"
@@ -206,7 +208,9 @@ function options_filter(select_name_arg, text) {
     for (var i = 1; i < options_number + 1; i++) {
       if (
         //compares the text of each option with the input text
-        $(`[select_name='${select_name}'] .option:nth-child(${i}) > .option-text`)
+        $(
+          `[select_name='${select_name}'] .option:nth-child(${i}) > .option-text`
+        )
           .html()
           .toLowerCase()
           .indexOf(text.toLowerCase()) == -1
@@ -261,7 +265,9 @@ function new_datas(select_name_arg, data, mod) {
         .append(`${html_chips}`);
     }
     if (mod == "add") {
-      $(`[select_name='${select_name_arg}'] .options-list`).append(html_options);
+      $(`[select_name='${select_name_arg}'] .options-list`).append(
+        html_options
+      );
       $(`[select_name='${select_name_arg}'] .chips`).append(`${html_chips} `);
     }
   } catch (error) {
@@ -293,8 +299,9 @@ function get_value(select_name_arg) {
     selected_info.names.push(text);
 
     if (
-      $(`[select_name='${select_name_arg}'] .options-list > div[value='${val}']`)
-        .length == 0
+      $(
+        `[select_name='${select_name_arg}'] .options-list > div[value='${val}']`
+      ).length == 0
     ) {
       selected_info.added_values.push(val);
     }

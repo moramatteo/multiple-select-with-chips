@@ -178,7 +178,7 @@ document.addEventListener("keydown", onKeyPressed);
 function onKeyPressed(e) {
   var key = e.key;
   if (
-    key == "Enter" &&
+    (key == "Enter" || key == "Tab") &&
     $(`[select_name='${select_name}']  .text-input`).is(":focus") == true &&
     $(`[select_name='${select_name}']  .text-input`).hasClass(
       "add_personal_chip"
