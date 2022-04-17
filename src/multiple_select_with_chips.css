@@ -36,7 +36,7 @@ body {
   flex-direction: column;
 }
 
-.selected {
+.multiple-select-chip  .selected {
   position: relative;
   height: var(--input_height);
   display: flex;
@@ -135,7 +135,7 @@ body {
   vertical-align: middle;
 }
 
-.select {
+.multiple-select-chip  .select {
   text-decoration: underline;
   color: blue;
 }
